@@ -161,10 +161,17 @@ def choose(inp: LadderInput) -> LadderResult:
 
     caveats: list[str] = []
     for o in blocking:
-        caveats.append(
-            f"Unresolved after {o.rounds} round(s): {questions.get(o.dispute_id, o.dispute_id)}."
-            " Both positions survived argument."
-        )
+        question = questions.get(o.dispute_id, o.dispute_id)
+        if o.rounds > 0:
+            caveats.append(
+                f"Unresolved after {o.rounds} round(s): {question}."
+                " Both positions survived argument."
+            )
+        else:
+            # No argument was run for this axis — it reached here from a verification that
+            # found nothing decisive, or from a cap. Saying "survived argument" would credit
+            # the standoff to a debate that never happened.
+            caveats.append(f"Left open without a debate: {question}. {o.note}".strip())
     for v in conflicting:
         caveats.append(
             f"Fact disputed and the public record did not settle it: "
@@ -190,6 +197,25 @@ def choose(inp: LadderInput) -> LadderResult:
 
     winners = {o.winning_stance for o in resolved if o.winning_stance}
     composition_check = len(winners) > 1
+
+    # Evidence is sticky. A stance that lost an axis to cited sources may not then win the run
+    # on a head-count, or the answer ends up contradicting the pipeline's own verification —
+    # observed live: evidence established that untracked files survive `git reset --hard`, the
+    # two-model majority said otherwise, and the published answer called the loss "total".
+    positions_by_dispute = {d.id: set(d.positions) for d in inp.disputes}
+    evidence_losers: set[str] = set()
+    for v in inp.verifications:
+        if v.resolves and v.winning_stance:
+            evidence_losers |= positions_by_dispute.get(v.dispute_id, set()) - {v.winning_stance}
+    eligible = [s for s in inp.stances if s.id not in evidence_losers]
+    if not eligible:
+        eligible = list(inp.stances)
+    elif evidence_losers:
+        defeated = ", ".join(sorted(evidence_losers))
+        caveats.append(
+            f"Position(s) {defeated} were set aside because cited sources settled an axis "
+            "against them; they could not then win on a head-count."
+        )
 
     def finish(
         rung: Rung,
@@ -238,10 +264,16 @@ def choose(inp: LadderInput) -> LadderResult:
             if hit:
                 return finish(rung, winning_stance=hit.winning_stance)
 
-    # Rung 3 — majority, counted only now that argument has had its chance.
-    total = sum(len(s.members) for s in inp.stances)
-    if inp.stances:
-        ranked = sorted(inp.stances, key=lambda s: len(s.members), reverse=True)
+    # Evidence eliminated every alternative, so what remains was decided by the sources rather
+    # than by counting heads — even though another axis is still open.
+    if len(eligible) == 1 and evidence_losers:
+        return finish(Rung.VERIFIED, winning_stance=eligible[0].id)
+
+    # Rung 3 — majority, counted only now that argument has had its chance, and only among
+    # positions evidence has not already defeated.
+    total = sum(len(s.members) for s in eligible)
+    if eligible:
+        ranked = sorted(eligible, key=lambda s: len(s.members), reverse=True)
         top = len(ranked[0].members)
         if len(ranked) == 1 or len(ranked[1].members) < top:
             return finish(
@@ -251,7 +283,7 @@ def choose(inp: LadderInput) -> LadderResult:
             )
 
     # Rung 4 — tie-break on visible evidence, in fixed order, with the reason published.
-    tied = inp.stances
+    tied = eligible
     for reason, score in (
         (
             "quality of engagement in the debate transcript",
@@ -265,7 +297,7 @@ def choose(inp: LadderInput) -> LadderResult:
             return finish(Rung.TIE_BREAK, winning_stance=pick.id, tie_break_reason=reason)
 
     # Rung 5 — the floor. Structural guarantee of termination.
-    holder = next((s for s in inp.stances if inp.floor_model in s.members), None)
+    holder = next((s for s in eligible if inp.floor_model in s.members), None)
     return finish(
         Rung.FLOOR,
         winning_stance=holder.id if holder else None,

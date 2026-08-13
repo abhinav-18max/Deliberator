@@ -1,11 +1,12 @@
 """Every path ends in exactly one answer, labelled by how it won."""
 
-from conftest import action, answer, ladder_input, outcome, stance, turn
+from conftest import action, answer, dispute, ladder_input, outcome, stance, turn
 
 from app.contracts import (
     Action,
     Citation,
     Confidence,
+    DisputeType,
     DissentKind,
     DropoutReason,
     Mechanism,
@@ -57,6 +58,20 @@ def test_majority_is_only_reached_when_a_dispute_survived_argument():
     assert result.confidence is Confidence.HIGH
     assert result.unresolved == ["d1"]
     assert any("Unresolved after 2 round" in c for c in result.caveats)
+
+
+def test_a_standoff_without_a_debate_does_not_claim_one_happened():
+    """A dispute that reached the vote from a conflicting verification never had an argument, so
+    the caveat must not credit the standoff to one."""
+    result = choose(
+        ladder_input(
+            outcomes=[outcome(resolved=False, winner=None, rounds=0)],
+            predictions={"m3": "s2"},
+        )
+    )
+
+    assert not any("survived argument" in c for c in result.caveats)
+    assert any("Left open without a debate" in c for c in result.caveats)
 
 
 def test_informed_dissent_lowers_a_majority_to_medium():
@@ -178,3 +193,40 @@ def test_dropouts_become_caveats():
     )
 
     assert any("m4 did not participate" in c for c in result.caveats)
+
+
+def test_evidence_defeated_position_cannot_win_on_a_head_count():
+    """Observed live: cited sources settled one axis against the two-model stance, a second axis
+    was left conflicting, and the head-count then crowned the stance the evidence had defeated —
+    publishing an answer that contradicted the pipeline's own verification."""
+    result = choose(
+        ladder_input(
+            stances=[stance("s1", ["m1", "m2"]), stance("s2", ["m3"])],
+            disputes=[dispute("d1", DisputeType.FACTUAL), dispute("d2", DisputeType.FACTUAL)],
+            outcomes=[
+                outcome("d1", mechanism=Mechanism.VERIFICATION, resolved=True, winner="s2"),
+                outcome("d2", resolved=False, winner=None, rounds=0),
+            ],
+            verifications=[
+                Verification(
+                    dispute_id="d1",
+                    outcome=VerifyOutcome.SUPPORTS,
+                    winning_stance="s2",
+                    summary="sources agree",
+                    citations=[Citation(url="https://example.org/a")],
+                    supporting_urls=["https://example.org/a"],
+                ),
+                Verification(
+                    dispute_id="d2",
+                    outcome=VerifyOutcome.CONFLICTING,
+                    summary="sources split",
+                    citations=[Citation(url="https://example.org/b")],
+                ),
+            ],
+        )
+    )
+
+    # s1 held the head-count 2-1 but lost d1 to cited sources, so it is set aside.
+    assert result.winning_stance == "s2"
+    assert result.rung is Rung.VERIFIED
+    assert any("set aside because cited sources" in c for c in result.caveats)

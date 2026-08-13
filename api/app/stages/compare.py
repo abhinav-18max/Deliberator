@@ -34,9 +34,13 @@ from ..roles import ResolvedRole
 _LABELS = "ABCDEFGH"
 
 
-def presentation_order(run_id: str, count: int) -> list[int]:
-    """Deterministic per run, so a trace replays identically, but not a fixed bias."""
-    digest = hashlib.sha256(run_id.encode()).digest()
+def presentation_order(seed: str, count: int) -> list[int]:
+    """Deterministic for a given seed, so a trace replays identically, but not a fixed bias.
+
+    The orchestrator seeds this from the envelope and panel rather than the run id, so the same
+    task presents the same way every time and recorded completions stay valid across runs.
+    """
+    digest = hashlib.sha256(seed.encode()).digest()
     indices = list(range(count))
     # Fisher-Yates driven by the digest: reproducible without a global RNG.
     for i in range(count - 1, 0, -1):

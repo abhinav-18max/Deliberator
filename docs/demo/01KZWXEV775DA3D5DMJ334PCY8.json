@@ -1,0 +1,714 @@
+{
+  "run": {
+    "_id": "01KZWXEV775DA3D5DMJ334PCY8",
+    "request": {
+      "task": "Our test suite takes 40 minutes in CI and it is blocking the team. What should we do first? Give one concrete recommendation.",
+      "context": null,
+      "models": [
+        "openai/gpt-5.2",
+        "deepseek/deepseek-v3.2",
+        "qwen/qwen3-max"
+      ],
+      "mode": "fast",
+      "overrides": [],
+      "default_model": null
+    },
+    "status": "complete",
+    "stage": "finalize",
+    "created_at": "2026-08-13T06:37:52.743548+00:00",
+    "updated_at": "2026-08-13T06:39:11.096534+00:00",
+    "config_fingerprint": "c492a3bdf6591804",
+    "roles": [
+      {
+        "role": "comparator",
+        "slug": "google/gemini-2.5-pro",
+        "prompt_version": "comparator_v1",
+        "enabled": true,
+        "on_panel": false,
+        "notes": []
+      },
+      {
+        "role": "verifier",
+        "slug": "anthropic/claude-haiku-4.5",
+        "prompt_version": "verifier_v1",
+        "enabled": true,
+        "on_panel": false,
+        "notes": []
+      },
+      {
+        "role": "synthesizer",
+        "slug": "anthropic/claude-sonnet-5",
+        "prompt_version": "synthesizer_v1",
+        "enabled": true,
+        "on_panel": false,
+        "notes": []
+      },
+      {
+        "role": "normalizer",
+        "slug": "openai/gpt-5.6-luna",
+        "prompt_version": "normalizer_v1",
+        "enabled": true,
+        "on_panel": false,
+        "notes": []
+      },
+      {
+        "role": "red_team",
+        "slug": "x-ai/grok-4.6",
+        "prompt_version": "redteam_v1",
+        "enabled": true,
+        "on_panel": false,
+        "notes": []
+      }
+    ],
+    "warnings": [],
+    "calls": 9,
+    "confidence": "medium",
+    "cost_micros": 42050,
+    "final": {
+      "final_answer": "First, profile the test suite to get a data-driven breakdown of where the 40 minutes actually goes: add per-test timing instrumentation in CI and publish a \"slowest tests/specs\" report (e.g., top 20) for every run. Use that list to identify the biggest contributors before making any infrastructure changes or rewriting tests \u2014 otherwise you risk optimizing the wrong thing.",
+      "label": "majority",
+      "resolution": "majority (2/3)",
+      "confidence": "medium",
+      "caveats": [
+        "Unresolved after 2 round(s): What is the most effective first action to take to reduce a 40-minute CI test suite runtime?. Both positions survived argument.",
+        "Surviving dissent: one position held that the first move should instead be to run the test suite in parallel across multiple CI workers, since that gives an immediate wall-clock time reduction without waiting on profiling data. This was not adopted (majority went with profiling first) but remains a live alternative if speed of relief matters more than understanding root cause.",
+        "If your actual goal is just to unblock the team's CI turnaround time as fast as possible (rather than to understand and fix the underlying slowness), the dissent's parallelization approach may be the more direct first step \u2014 the winning recommendation assumes you want to diagnose before treating."
+      ],
+      "rung": 3,
+      "tie_break_reason": null,
+      "unresolved_disputes": [
+        "d1"
+      ],
+      "dissent": "informed",
+      "panel": [
+        "qwen/qwen3-max",
+        "openai/gpt-5.2",
+        "deepseek/deepseek-v3.2"
+      ],
+      "referees": [
+        {
+          "role": "comparator",
+          "slug": "google/gemini-2.5-pro",
+          "prompt_version": "comparator_v1",
+          "off_panel": true
+        },
+        {
+          "role": "verifier",
+          "slug": "anthropic/claude-haiku-4.5",
+          "prompt_version": "verifier_v1",
+          "off_panel": true
+        },
+        {
+          "role": "synthesizer",
+          "slug": "anthropic/claude-sonnet-5",
+          "prompt_version": "synthesizer_v1",
+          "off_panel": true
+        },
+        {
+          "role": "normalizer",
+          "slug": "openai/gpt-5.6-luna",
+          "prompt_version": "normalizer_v1",
+          "off_panel": true
+        },
+        {
+          "role": "red_team",
+          "slug": "x-ai/grok-4.6",
+          "prompt_version": "redteam_v1",
+          "off_panel": true
+        }
+      ],
+      "gate_validated": true,
+      "calls": 9,
+      "cost_micros": 42050,
+      "duration_ms": 78198
+    },
+    "label": "majority"
+  },
+  "events": [
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 1,
+      "type": "run.started",
+      "ts": "2026-08-13T06:37:52.802688Z",
+      "payload": {
+        "task": "Our test suite takes 40 minutes in CI and it is blocking the team. What should we do first? Give one concrete recommendation.",
+        "has_context": false,
+        "models": [
+          "openai/gpt-5.2",
+          "deepseek/deepseek-v3.2",
+          "qwen/qwen3-max"
+        ],
+        "mode": "fast",
+        "floor_model": "openai/gpt-5.2",
+        "roles": [
+          {
+            "role": "comparator",
+            "slug": "google/gemini-2.5-pro",
+            "prompt_version": "comparator_v1",
+            "enabled": true,
+            "on_panel": false,
+            "notes": []
+          },
+          {
+            "role": "verifier",
+            "slug": "anthropic/claude-haiku-4.5",
+            "prompt_version": "verifier_v1",
+            "enabled": true,
+            "on_panel": false,
+            "notes": []
+          },
+          {
+            "role": "synthesizer",
+            "slug": "anthropic/claude-sonnet-5",
+            "prompt_version": "synthesizer_v1",
+            "enabled": true,
+            "on_panel": false,
+            "notes": []
+          },
+          {
+            "role": "normalizer",
+            "slug": "openai/gpt-5.6-luna",
+            "prompt_version": "normalizer_v1",
+            "enabled": true,
+            "on_panel": false,
+            "notes": []
+          },
+          {
+            "role": "red_team",
+            "slug": "x-ai/grok-4.6",
+            "prompt_version": "redteam_v1",
+            "enabled": true,
+            "on_panel": false,
+            "notes": []
+          }
+        ],
+        "gate_validated": true,
+        "warnings": [],
+        "config_fingerprint": "c492a3bdf6591804"
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 2,
+      "type": "stage.entered",
+      "ts": "2026-08-13T06:37:52.908770Z",
+      "payload": {
+        "stage": "guard"
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 3,
+      "type": "stage.entered",
+      "ts": "2026-08-13T06:37:53.033226Z",
+      "payload": {
+        "stage": "fanout"
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 4,
+      "type": "panel.answer",
+      "ts": "2026-08-13T06:38:00.453296Z",
+      "payload": {
+        "model": "qwen/qwen3-max",
+        "answer": "Run the test suite in parallel across multiple CI workers to reduce wall-clock time immediately.",
+        "key_claims": [
+          "The test suite\u2019s total runtime is the sum of individual test runtimes that can be distributed.",
+          "CI infrastructure typically supports parallel job execution with minimal configuration changes.",
+          "Parallelization reduces wall-clock duration without requiring test modification or risk of coverage loss.",
+          "Reducing feedback time unblocks developers faster than optimizing individual tests."
+        ],
+        "assumptions": [
+          "The test suite consists of independent or loosely coupled tests that can be split without shared state causing flakiness.",
+          "The CI system has available capacity or budget to spin up additional parallel workers.",
+          "The team\u2019s primary bottleneck is waiting for test results, not debugging flaky or failing tests.",
+          "No prior attempt has been made to parallelize the suite (i.e., this is a low-hanging fruit)."
+        ],
+        "expected_consensus": "Most other capable models will recommend identifying and removing slow or redundant tests first, or suggest profiling the suite to find bottlenecks before investing in parallelization.",
+        "normalized": false,
+        "latency_ms": 6721,
+        "cost_micros": 1197
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 5,
+      "type": "panel.answer",
+      "ts": "2026-08-13T06:38:03.635454Z",
+      "payload": {
+        "model": "openai/gpt-5.2",
+        "answer": "First, get a data-driven breakdown of where the 40 minutes goes by adding per-test timing in CI and publishing a \u201cslowest tests/specs\u201d report (e.g., top 20) for every run; use that list to target the biggest contributors before changing infrastructure or rewriting tests.",
+        "key_claims": [
+          "Without per-test timing, you can\u2019t reliably know which tests or suites dominate the 40-minute runtime.",
+          "A small fraction of tests often accounts for a large fraction of total test time, so a \u201cslowest tests\u201d list quickly identifies high-leverage fixes.",
+          "Publishing timing data in CI makes regressions visible and prevents the suite from silently getting slower again."
+        ],
+        "assumptions": [
+          "The current CI output does not already provide a clear per-test or per-suite timing breakdown.",
+          "The test framework/runner can be configured to record and output per-test or per-suite durations.",
+          "You want the highest-leverage first step before deciding on solutions like parallelization, sharding, or test refactors."
+        ],
+        "expected_consensus": "Most other capable models will recommend either (a) measuring/profiling to find the slowest tests/suites first or (b) parallelizing/sharding tests in CI as the quickest immediate win.",
+        "normalized": false,
+        "latency_ms": 10276,
+        "cost_micros": 7474
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 6,
+      "type": "panel.answer",
+      "ts": "2026-08-13T06:38:06.638389Z",
+      "payload": {
+        "model": "deepseek/deepseek-v3.2",
+        "answer": "First, profile the test suite to identify the slowest individual tests or test groups, then prioritize optimizing or parallelizing those specific tests.",
+        "key_claims": [
+          "A 40-minute CI test suite is a bottleneck for team productivity.",
+          "The first step should be to gather data about where the time is spent.",
+          "Profiling will reveal which specific tests or test categories are the slowest.",
+          "Optimizing the slowest tests will yield the greatest initial time reduction."
+        ],
+        "assumptions": [
+          "The team has the ability to run the test suite locally or in CI with profiling/timing output.",
+          "The test suite is not already fully parallelized or the parallelization is inefficient.",
+          "The primary goal is to reduce the wall-clock time of the test run, not to reduce the number of tests.",
+          "The underlying code and tests are not so fragile that profiling would be prohibitively difficult."
+        ],
+        "expected_consensus": "Most other models will recommend parallelizing the test suite as the first action.",
+        "normalized": false,
+        "latency_ms": 13027,
+        "cost_micros": 178
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 7,
+      "type": "model.call",
+      "ts": "2026-08-13T06:38:06.691773Z",
+      "payload": {
+        "role": "panel",
+        "slug": "qwen/qwen3-max",
+        "upstream_provider": "Alibaba",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786603075-bgsmisqRBHOw2nwK9WHH",
+        "call_key": "b078729a4a93af27eb120e2fcb201857",
+        "prompt_tokens": 355,
+        "completion_tokens": 236,
+        "cost_micros": 1197,
+        "latency_ms": 6721
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 8,
+      "type": "model.call",
+      "ts": "2026-08-13T06:38:06.691801Z",
+      "payload": {
+        "role": "panel",
+        "slug": "openai/gpt-5.2",
+        "upstream_provider": "OpenAI",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786603074-8tEeNYgQdtqlvC2RhMSt",
+        "call_key": "b908934d928da30e3a6a7b53ed29cbdc",
+        "prompt_tokens": 479,
+        "completion_tokens": 474,
+        "cost_micros": 7474,
+        "latency_ms": 10276
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 9,
+      "type": "model.call",
+      "ts": "2026-08-13T06:38:06.691809Z",
+      "payload": {
+        "role": "panel",
+        "slug": "deepseek/deepseek-v3.2",
+        "upstream_provider": "DeepInfra",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786603074-DjgjyGIucBwGgnVRBWj1",
+        "call_key": "1c6c559672d72a952447916dc71f86d5",
+        "prompt_tokens": 354,
+        "completion_tokens": 225,
+        "cost_micros": 178,
+        "latency_ms": 13027
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 10,
+      "type": "stage.entered",
+      "ts": "2026-08-13T06:38:06.857947Z",
+      "payload": {
+        "stage": "compare"
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 11,
+      "type": "model.call",
+      "ts": "2026-08-13T06:38:33.180344Z",
+      "payload": {
+        "role": "comparator",
+        "slug": "google/gemini-2.5-pro",
+        "upstream_provider": "Google",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786603087-t0vIGkffbZakt6RCYlNX",
+        "call_key": "574c88d7cfb78bcecb50cd512a5fb7f4",
+        "prompt_tokens": 2003,
+        "completion_tokens": 2523,
+        "cost_micros": 0,
+        "latency_ms": 26107
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 12,
+      "type": "compare.verdict",
+      "ts": "2026-08-13T06:38:33.230633Z",
+      "payload": {
+        "verdict": "material",
+        "justification": "The models propose two different, mutually exclusive first steps. One stance (A, C) advises profiling the test suite to gather data on slow tests first. The other stance (B) advises immediately parallelizing the test suite in CI. A user would have to choose one of these actions to perform first, making the disagreement material.",
+        "unstable": false,
+        "stances": [
+          {
+            "id": "s1",
+            "summary": "First, profile the test suite to identify the slowest tests and gather data on where time is spent.",
+            "members": [
+              "deepseek/deepseek-v3.2",
+              "openai/gpt-5.2"
+            ],
+            "strongest": "openai/gpt-5.2"
+          },
+          {
+            "id": "s2",
+            "summary": "First, run the test suite in parallel across multiple CI workers for an immediate time reduction.",
+            "members": [
+              "qwen/qwen3-max"
+            ],
+            "strongest": "qwen/qwen3-max"
+          }
+        ],
+        "dispute_count": 1
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 13,
+      "type": "stage.entered",
+      "ts": "2026-08-13T06:38:33.285016Z",
+      "payload": {
+        "stage": "resolve"
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 14,
+      "type": "dispute.opened",
+      "ts": "2026-08-13T06:38:33.431897Z",
+      "payload": {
+        "id": "d1",
+        "type": "approach",
+        "question": "What is the most effective first action to take to reduce a 40-minute CI test suite runtime?",
+        "decision_impact": "If stance s1 (profile first) is correct, the user should first instrument their test suite to gather timing data, which will then inform the next optimization step. If stance s2 (parallelize first) is correct, the user should first change their CI configuration to run tests in parallel for an immediate reduction in wall-clock time.",
+        "positions": {
+          "s1": "The best first step is to gather data by profiling the test suite to identify the specific bottlenecks. This allows for a more targeted and effective long-term solution.",
+          "s2": "The best first step is to parallelize the test suite. This is often a low-effort way to achieve a significant and immediate reduction in wall-clock time without needing to analyze or modify individual tests."
+        },
+        "search_query": null
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 15,
+      "type": "debate.turn",
+      "ts": "2026-08-13T06:38:45.258659Z",
+      "payload": {
+        "dispute_id": "d1",
+        "round": 1,
+        "stance_id": "s1",
+        "model": "openai/gpt-5.2",
+        "steelman": "Parallelizing is often the fastest path to relief: most CI systems and test runners support splitting tests across N workers with minimal code changes, and wall-clock time tends to drop roughly in proportion to added executors. You don\u2019t need to understand the suite\u2019s internals to get an immediate win, and you can iterate later on deeper optimizations once the team is unblocked.",
+        "response": "Parallelization can indeed cut wall-clock time quickly, but as a *first* step it\u2019s fragile and often inefficient without timing data. You need per-test (or per-file) durations to shard intelligently; otherwise you frequently end up with one \u201clong pole\u201d worker running a few slow tests while others sit idle, yielding disappointing speedups. Also, parallelizing before identifying bottlenecks can amplify existing problems: shared fixtures/databases and hidden test coupling can create new flakes and contention, and you may simply trade time for cost (more executors) while the underlying slow tests continue to regress. Profiling is a small upfront investment that de-risks parallelization and any other fix by telling you exactly what dominates runtime and by enabling a durable guardrail (published timing/regression tracking) so the suite doesn\u2019t silently grow back to 40 minutes.",
+        "actions": [
+          {
+            "against_stance": "The best first step is to parallelize the test suite. This is often a low-effort way to achieve a significant and immediate reduction in wall-clock time without needing to analyze or modify individual tests.",
+            "action": "defend",
+            "because": "Parallelization without per-test timing commonly produces poor sharding (one slow worker dominates) and can introduce flakiness/contended shared resources; profiling first is the lowest-risk way to target the true runtime drivers and to make any parallelization effective and sustainable.",
+            "withdrawn_claim": null
+          }
+        ],
+        "parse_degraded": false,
+        "cost_micros": 8760
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 16,
+      "type": "debate.turn",
+      "ts": "2026-08-13T06:38:45.315607Z",
+      "payload": {
+        "dispute_id": "d1",
+        "round": 1,
+        "stance_id": "s2",
+        "model": "qwen/qwen3-max",
+        "steelman": "The strongest form of Position s1 argues that before making structural changes like parallelization, the team should first understand where time is actually being spent in the test suite. Profiling reveals whether slowness stems from a few long-running tests, setup/teardown overhead, I/O bottlenecks, or systemic inefficiencies. This data prevents wasted effort\u2014for example, parallelizing a suite dominated by one 35-minute test yields little benefit, whereas refactoring or isolating that test could be transformative. Moreover, profiling often uncovers low-hanging fruit (e.g., accidental sleeps, redundant database calls) that can be fixed quickly without infrastructure changes. Acting without measurement risks optimizing the wrong thing and missing opportunities for deeper, more sustainable improvements.",
+        "response": "While profiling is valuable for long-term optimization, it is not the best *first* step when the team is actively blocked by a 40-minute feedback loop. Parallelization can often be implemented in minutes to hours using existing CI capabilities (e.g., splitting tests across workers via file or test-class sharding), delivering immediate wall-clock reduction\u2014potentially cutting runtime to 10\u201315 minutes on modest parallelism\u2014while profiling and deeper fixes proceed in parallel. The claim that profiling must precede any action assumes we lack even basic knowledge of our test structure, which is rarely true; most teams can safely split tests by file or module without detailed profiling. Delaying parallelization to gather data prolongs the blocking state unnecessarily, whereas parallelization unblocks developers *now* with minimal risk.",
+        "actions": [
+          {
+            "against_stance": "s1",
+            "action": "defend",
+            "because": "Parallelization provides faster relief to a blocked team than the data-gathering phase of profiling, and can be done safely without deep analysis in most real-world CI environments.",
+            "withdrawn_claim": null
+          }
+        ],
+        "parse_degraded": false,
+        "cost_micros": 2098
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 17,
+      "type": "debate.turn",
+      "ts": "2026-08-13T06:39:02.991656Z",
+      "payload": {
+        "dispute_id": "d1",
+        "round": 2,
+        "stance_id": "s1",
+        "model": "openai/gpt-5.2",
+        "steelman": "When a team is actively blocked by a 40\u2011minute CI loop, the best \u201cfirst\u201d step is the one that reduces wall-clock time fastest with the least engineering risk. Most CI systems and test runners already support splitting a test suite across multiple workers (even by coarse file/module sharding), so parallelization can often be done in hours and immediately cut feedback time dramatically, while deeper analysis and fixes continue in the background.",
+        "response": "That objection mostly lands: if your CI already supports easy parallelism and your suite is reasonably parallel-safe, delaying an immediate wall-clock win just to collect detailed timing data can be the wrong trade when the team is stuck waiting.\n\nWhere I still disagree with the \u201cno need for profiling\u201d implication is that naive sharding frequently under-delivers (one slow shard dominates, so wall time barely improves), and parallelization can surface shared-state issues/flakes that are costly to debug. In practice, the fastest path to a *reliable* big drop is to parallelize *with* some minimal timing-informed balancing (often available from the runner/CI without a big investigation). But if forced to pick a single first move under active blockage, enabling parallel execution/sharding is the more immediately leverageable step\u2014provided you validate that tests are isolated enough and you can observe shard runtimes to avoid a long-tail shard negating the benefit.",
+        "actions": [
+          {
+            "against_stance": "Parallelize the test suite first.",
+            "action": "revise",
+            "because": "Given the explicit constraint that the team is currently blocked by a 40-minute feedback loop, the immediacy and typically low implementation overhead of CI parallelization outweighs doing deeper profiling as the very first step\u2014so long as shard runtimes are monitored to ensure the split is effective.",
+            "withdrawn_claim": null
+          }
+        ],
+        "parse_degraded": false,
+        "cost_micros": 14546
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 18,
+      "type": "debate.turn",
+      "ts": "2026-08-13T06:39:03.045528Z",
+      "payload": {
+        "dispute_id": "d1",
+        "round": 2,
+        "stance_id": "s2",
+        "model": "qwen/qwen3-max",
+        "steelman": "The opposing position rightly emphasizes that blind parallelization\u2014without knowing which tests are slow or how work is distributed\u2014can lead to inefficient sharding, underutilized resources, and even new flakiness due to hidden test dependencies. They also correctly note that profiling provides a foundation for both immediate and long-term improvements, including regression tracking.",
+        "response": "However, their objection conflates *optimal* parallelization with *any* parallelization. Even naive sharding (e.g., by file count or alphabetical split) on a 40-minute suite typically yields substantial wall-clock reductions\u2014often 2\u20134\u00d7\u2014because test durations usually follow a long-tail distribution where many tests are fast and only a few are slow. Waiting to profile first delays the primary goal: unblocking developers *now*. Moreover, modern CI systems (e.g., GitHub Actions, GitLab CI, Buildkite) offer built-in test splitting by timing *after just one baseline run*, meaning you can parallelize immediately and refine sharding in the next run. The risk of flakes from parallelization is real but often overestimated; if tests are already passing reliably in sequence, running them in parallel on isolated workers rarely introduces coupling unless shared external state (like a database) is improperly managed\u2014which is a pre-existing flaw worth exposing early. Finally, profiling itself takes time: you must instrument, run the full suite again, analyze results, and then act. Parallelization delivers faster feedback *today*; profiling informs how to make it better *tomorrow*.",
+        "actions": [
+          {
+            "against_stance": "s1",
+            "action": "defend",
+            "because": "Parallelization remains the highest-leverage first action because it directly addresses the blocking delay with minimal setup, and its benefits begin immediately\u2014even imperfectly\u2014while profiling can be layered in afterward as a refinement step.",
+            "withdrawn_claim": null
+          }
+        ],
+        "parse_degraded": false,
+        "cost_micros": 2169
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 19,
+      "type": "dispute.closed",
+      "ts": "2026-08-13T06:39:03.109727Z",
+      "payload": {
+        "dispute_id": "d1",
+        "mechanism": "unresolved",
+        "resolved": false,
+        "winning_stance": null,
+        "rounds": 2,
+        "note": "both positions survived argument \u2014 an honest standoff, not a failure"
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 20,
+      "type": "model.call",
+      "ts": "2026-08-13T06:39:03.227320Z",
+      "payload": {
+        "role": "debater",
+        "slug": "openai/gpt-5.2",
+        "upstream_provider": "OpenAI",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786603113-V5Q2qPAGaTTTiIT8HF0n",
+        "call_key": "dd30f683eb1bb508dc3757d16c6fc8d9",
+        "prompt_tokens": 902,
+        "completion_tokens": 513,
+        "cost_micros": 8760,
+        "latency_ms": 10494
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 21,
+      "type": "model.call",
+      "ts": "2026-08-13T06:39:03.227343Z",
+      "payload": {
+        "role": "debater",
+        "slug": "qwen/qwen3-max",
+        "upstream_provider": "Alibaba",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786603113-SLMGarH0DtzaReCCm82E",
+        "call_key": "7ee8ff6ee5a5a16bc78271c0c074e409",
+        "prompt_tokens": 680,
+        "completion_tokens": 402,
+        "cost_micros": 2098,
+        "latency_ms": 11659
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 22,
+      "type": "model.call",
+      "ts": "2026-08-13T06:39:03.227350Z",
+      "payload": {
+        "role": "debater",
+        "slug": "qwen/qwen3-max",
+        "upstream_provider": "Alibaba",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786603125-IVKPkQIrGFDOa31zcjTf",
+        "call_key": "4334e9cfc055873bb13364b942360e1e",
+        "prompt_tokens": 636,
+        "completion_tokens": 429,
+        "cost_micros": 2169,
+        "latency_ms": 10338
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 23,
+      "type": "model.call",
+      "ts": "2026-08-13T06:39:03.227357Z",
+      "payload": {
+        "role": "debater",
+        "slug": "openai/gpt-5.2",
+        "upstream_provider": "OpenAI",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786603125-dpYeIjQVPbwDFcj9xyLg",
+        "call_key": "7ce3506d3ba98887ed89d29f983dbd71",
+        "prompt_tokens": 848,
+        "completion_tokens": 933,
+        "cost_micros": 14546,
+        "latency_ms": 17566
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 24,
+      "type": "stage.entered",
+      "ts": "2026-08-13T06:39:03.431190Z",
+      "payload": {
+        "stage": "finalize"
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 25,
+      "type": "ladder.rung",
+      "ts": "2026-08-13T06:39:03.531711Z",
+      "payload": {
+        "rung": 3,
+        "label": "majority",
+        "resolution": "majority (2/3)",
+        "confidence": "medium",
+        "winning_stance": "s1",
+        "tie_break_reason": null,
+        "unresolved": [
+          "d1"
+        ],
+        "branches": []
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 26,
+      "type": "model.call",
+      "ts": "2026-08-13T06:39:10.942394Z",
+      "payload": {
+        "role": "synthesizer",
+        "slug": "anthropic/claude-sonnet-5",
+        "upstream_provider": "Amazon Bedrock",
+        "routing_unpinned": true,
+        "generation_id": "gen-1786603143-tRNjv8SOq67wOrv3fi4A",
+        "call_key": "5d81304d53a68f4bda5b928307023826",
+        "prompt_tokens": 1119,
+        "completion_tokens": 339,
+        "cost_micros": 5628,
+        "latency_ms": 7192
+      }
+    },
+    {
+      "run_id": "01KZWXEV775DA3D5DMJ334PCY8",
+      "seq": 27,
+      "type": "run.final",
+      "ts": "2026-08-13T06:39:10.992789Z",
+      "payload": {
+        "final_answer": "First, profile the test suite to get a data-driven breakdown of where the 40 minutes actually goes: add per-test timing instrumentation in CI and publish a \"slowest tests/specs\" report (e.g., top 20) for every run. Use that list to identify the biggest contributors before making any infrastructure changes or rewriting tests \u2014 otherwise you risk optimizing the wrong thing.",
+        "label": "majority",
+        "resolution": "majority (2/3)",
+        "confidence": "medium",
+        "caveats": [
+          "Unresolved after 2 round(s): What is the most effective first action to take to reduce a 40-minute CI test suite runtime?. Both positions survived argument.",
+          "Surviving dissent: one position held that the first move should instead be to run the test suite in parallel across multiple CI workers, since that gives an immediate wall-clock time reduction without waiting on profiling data. This was not adopted (majority went with profiling first) but remains a live alternative if speed of relief matters more than understanding root cause.",
+          "If your actual goal is just to unblock the team's CI turnaround time as fast as possible (rather than to understand and fix the underlying slowness), the dissent's parallelization approach may be the more direct first step \u2014 the winning recommendation assumes you want to diagnose before treating."
+        ],
+        "rung": 3,
+        "tie_break_reason": null,
+        "unresolved_disputes": [
+          "d1"
+        ],
+        "dissent": "informed",
+        "panel": [
+          "qwen/qwen3-max",
+          "openai/gpt-5.2",
+          "deepseek/deepseek-v3.2"
+        ],
+        "referees": [
+          {
+            "role": "comparator",
+            "slug": "google/gemini-2.5-pro",
+            "prompt_version": "comparator_v1",
+            "off_panel": true
+          },
+          {
+            "role": "verifier",
+            "slug": "anthropic/claude-haiku-4.5",
+            "prompt_version": "verifier_v1",
+            "off_panel": true
+          },
+          {
+            "role": "synthesizer",
+            "slug": "anthropic/claude-sonnet-5",
+            "prompt_version": "synthesizer_v1",
+            "off_panel": true
+          },
+          {
+            "role": "normalizer",
+            "slug": "openai/gpt-5.6-luna",
+            "prompt_version": "normalizer_v1",
+            "off_panel": true
+          },
+          {
+            "role": "red_team",
+            "slug": "x-ai/grok-4.6",
+            "prompt_version": "redteam_v1",
+            "off_panel": true
+          }
+        ],
+        "gate_validated": true,
+        "calls": 9,
+        "cost_micros": 42050,
+        "duration_ms": 78198
+      }
+    }
+  ]
+}

@@ -180,7 +180,11 @@ class Orchestrator:
 
         # ---- Stage 2: compare (the gate) ----------------------------------------
         yield self._event(run_id, EventType.STAGE_ENTERED, {"stage": Stage.COMPARE.value})
-        order = compare.presentation_order(run_id, len(answers))
+        # Seeded by content, not by run id: the order must be stable for a given task so a
+        # re-run replays from recorded completions instead of missing the cache on every call.
+        order = compare.presentation_order(
+            envelope.rendered() + "|".join(a.model for a in answers), len(answers)
+        )
         comparison = await compare.run(
             caller,
             roles[Role.COMPARATOR],

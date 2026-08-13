@@ -135,17 +135,43 @@ def validate(events: list[TraceEvent]) -> list[Violation]:  # noqa: C901 — one
                 )
             )
 
-    if rung in (Rung.MAJORITY, Rung.TIE_BREAK, Rung.FLOOR) and resolved_by & {
-        Mechanism.DEBATE,
-        Mechanism.VERIFICATION,
-    }:
-        # Voting sits below argument. If argument or evidence settled it, a lower rung is a
-        # demotion the tape does not justify.
+    still_open = [
+        c
+        for c in closed
+        if not c.get("resolved") and Mechanism(c["mechanism"]) is not Mechanism.BRANCH
+    ]
+    if (
+        rung in (Rung.MAJORITY, Rung.TIE_BREAK, Rung.FLOOR)
+        and not still_open
+        and resolved_by & {Mechanism.DEBATE, Mechanism.VERIFICATION}
+    ):
+        # Voting sits below argument: if argument or evidence settled *everything*, dropping to
+        # a head-count is a demotion the tape does not justify. With an axis still open the
+        # lower rung is legitimate — but see the sticky-evidence rule below, which stops the
+        # head-count from crowning a position the sources already defeated.
         out.append(
             Violation(
                 "voting-sits-below-argument",
-                f"rung {int(rung)} taken although a dispute was resolved by "
+                f"rung {int(rung)} taken although every dispute was resolved by "
                 f"{', '.join(sorted(m.value for m in resolved_by))}",
+            )
+        )
+
+    # Evidence is sticky: the winner may not be a position that lost an axis to cited sources.
+    evidence_losers: set[str] = set()
+    disputes = {d["id"]: d for d in by_type.get(EventType.DISPUTE_OPENED, [])}
+    for v in verifications:
+        if VerifyOutcome(v["outcome"]) is not VerifyOutcome.SUPPORTS or not v.get("citations"):
+            continue
+        positions = set((disputes.get(v["dispute_id"]) or {}).get("positions") or {})
+        evidence_losers |= positions - {v.get("winning_stance")}
+    published_winner = (rung_events[-1].get("winning_stance") if rung_events else None) or None
+    if published_winner and published_winner in evidence_losers:
+        out.append(
+            Violation(
+                "evidence-is-sticky",
+                f"{published_winner} won the run although cited sources settled an axis "
+                "against it — the answer can contradict the pipeline's own verification",
             )
         )
 

@@ -1,0 +1,834 @@
+{
+  "run": {
+    "_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+    "request": {
+      "task": "What exactly does `git reset --hard HEAD~1` do to the last commit and to any uncommitted changes in the working tree? Be precise and brief.",
+      "context": null,
+      "models": [
+        "openai/gpt-5.2",
+        "deepseek/deepseek-v3.2",
+        "qwen/qwen3-max"
+      ],
+      "mode": "fast",
+      "overrides": [],
+      "default_model": null
+    },
+    "status": "complete",
+    "stage": "finalize",
+    "created_at": "2026-08-13T07:59:17.877300+00:00",
+    "updated_at": "2026-08-13T08:00:22.878382+00:00",
+    "config_fingerprint": "c492a3bdf6591804",
+    "roles": [
+      {
+        "role": "comparator",
+        "slug": "google/gemini-2.5-pro",
+        "prompt_version": "comparator_v1",
+        "enabled": true,
+        "on_panel": false,
+        "notes": []
+      },
+      {
+        "role": "verifier",
+        "slug": "anthropic/claude-haiku-4.5",
+        "prompt_version": "verifier_v1",
+        "enabled": true,
+        "on_panel": false,
+        "notes": []
+      },
+      {
+        "role": "synthesizer",
+        "slug": "anthropic/claude-sonnet-5",
+        "prompt_version": "synthesizer_v1",
+        "enabled": true,
+        "on_panel": false,
+        "notes": []
+      },
+      {
+        "role": "normalizer",
+        "slug": "openai/gpt-5.6-luna",
+        "prompt_version": "normalizer_v1",
+        "enabled": true,
+        "on_panel": false,
+        "notes": []
+      },
+      {
+        "role": "red_team",
+        "slug": "x-ai/grok-4.6",
+        "prompt_version": "redteam_v1",
+        "enabled": true,
+        "on_panel": false,
+        "notes": []
+      }
+    ],
+    "warnings": [],
+    "calls": 9,
+    "confidence": "high",
+    "cost_micros": 68880,
+    "final": {
+      "final_answer": "`git reset --hard HEAD~1` moves the current branch pointer (and `HEAD`) back one commit, to the parent of the current commit, and then forces both the index (staging area) and the working tree to exactly match that parent commit.\n\nEffect on the last commit: it is removed from the branch's history \u2014 it's no longer reachable from the branch tip \u2014 but it is typically recoverable for a period of time via `git reflog` (as long as garbage collection hasn't run). Reflog entries are commonly retained for at least 30 days, and at least 90 days if the commit is an ancestor of the branch tip, though eventually `git gc` can clean them up permanently.\n\nEffect on uncommitted changes: any staged and unstaged modifications to tracked files are discarded and overwritten to match the parent commit. Untracked files are left untouched \u2014 Git's reset does not delete them; a separate command (`git clean`) is required to remove untracked files.",
+      "label": "verified",
+      "resolution": "verified",
+      "confidence": "high",
+      "caveats": [
+        "Position(s) s2 were set aside because cited sources settled an axis against them; they could not then win on a head-count.",
+        "Surviving dissent (s2): one position holds that the reset 'permanently discards the commit and all uncommitted changes.' This was not adopted \u2014 evidence (reflog behavior documented via Stack Overflow and GitHub's own blog, and Git's handling of untracked files) shows the commit is generally recoverable via `git reflog` for a window of time, and untracked files are never touched by `--hard` reset.",
+        "This would change if: recovery via reflog is not truly available in your situation \u2014 e.g., if `git gc` has already run and pruned unreachable commits, or enough time (30\u201390+ days) has passed for reflog entries to expire, making the commit unrecoverable in practice.",
+        "Read as a reset of tracked changes and history reachability only \u2014 if you meant whether untracked files might also be lost, the answer changes to: no, untracked files are unaffected by `--hard` reset and require a separate `git clean` to remove."
+      ],
+      "rung": 2,
+      "tie_break_reason": null,
+      "unresolved_disputes": [],
+      "dissent": "oblivious",
+      "panel": [
+        "openai/gpt-5.2",
+        "deepseek/deepseek-v3.2",
+        "qwen/qwen3-max"
+      ],
+      "referees": [
+        {
+          "role": "comparator",
+          "slug": "google/gemini-2.5-pro",
+          "prompt_version": "comparator_v1",
+          "off_panel": true
+        },
+        {
+          "role": "verifier",
+          "slug": "anthropic/claude-haiku-4.5",
+          "prompt_version": "verifier_v1",
+          "off_panel": true
+        },
+        {
+          "role": "synthesizer",
+          "slug": "anthropic/claude-sonnet-5",
+          "prompt_version": "synthesizer_v1",
+          "off_panel": true
+        },
+        {
+          "role": "normalizer",
+          "slug": "openai/gpt-5.6-luna",
+          "prompt_version": "normalizer_v1",
+          "off_panel": true
+        },
+        {
+          "role": "red_team",
+          "slug": "x-ai/grok-4.6",
+          "prompt_version": "redteam_v1",
+          "off_panel": true
+        }
+      ],
+      "gate_validated": true,
+      "calls": 9,
+      "cost_micros": 68880,
+      "duration_ms": 64838
+    },
+    "label": "verified"
+  },
+  "events": [
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 1,
+      "type": "run.started",
+      "ts": "2026-08-13T07:59:17.933654Z",
+      "payload": {
+        "task": "What exactly does `git reset --hard HEAD~1` do to the last commit and to any uncommitted changes in the working tree? Be precise and brief.",
+        "has_context": false,
+        "models": [
+          "openai/gpt-5.2",
+          "deepseek/deepseek-v3.2",
+          "qwen/qwen3-max"
+        ],
+        "mode": "fast",
+        "floor_model": "openai/gpt-5.2",
+        "roles": [
+          {
+            "role": "comparator",
+            "slug": "google/gemini-2.5-pro",
+            "prompt_version": "comparator_v1",
+            "enabled": true,
+            "on_panel": false,
+            "notes": []
+          },
+          {
+            "role": "verifier",
+            "slug": "anthropic/claude-haiku-4.5",
+            "prompt_version": "verifier_v1",
+            "enabled": true,
+            "on_panel": false,
+            "notes": []
+          },
+          {
+            "role": "synthesizer",
+            "slug": "anthropic/claude-sonnet-5",
+            "prompt_version": "synthesizer_v1",
+            "enabled": true,
+            "on_panel": false,
+            "notes": []
+          },
+          {
+            "role": "normalizer",
+            "slug": "openai/gpt-5.6-luna",
+            "prompt_version": "normalizer_v1",
+            "enabled": true,
+            "on_panel": false,
+            "notes": []
+          },
+          {
+            "role": "red_team",
+            "slug": "x-ai/grok-4.6",
+            "prompt_version": "redteam_v1",
+            "enabled": true,
+            "on_panel": false,
+            "notes": []
+          }
+        ],
+        "gate_validated": true,
+        "warnings": [],
+        "config_fingerprint": "c492a3bdf6591804"
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 2,
+      "type": "stage.entered",
+      "ts": "2026-08-13T07:59:18.032913Z",
+      "payload": {
+        "stage": "guard"
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 3,
+      "type": "stage.entered",
+      "ts": "2026-08-13T07:59:18.139906Z",
+      "payload": {
+        "stage": "fanout"
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 4,
+      "type": "panel.answer",
+      "ts": "2026-08-13T07:59:18.292047Z",
+      "payload": {
+        "model": "openai/gpt-5.2",
+        "answer": "`git reset --hard HEAD~1` moves the current branch (and `HEAD`) back one commit to `HEAD`\u2019s parent, and then forces both the index (staging area) and the working tree to exactly match that commit.\n\nEffect on the last commit: it is removed from the branch history (no longer reachable from the branch tip), though it can typically still be recovered via the reflog for a while.\n\nEffect on uncommitted changes: any staged and unstaged modifications to tracked files are discarded/overwritten. Untracked files are not removed.",
+        "key_claims": [
+          "It moves the current branch tip and HEAD to the commit referenced by HEAD~1 (the parent of the current HEAD).",
+          "With --hard, the index is reset to match the target commit.",
+          "With --hard, the working tree\u2019s tracked files are reset to match the target commit, discarding staged and unstaged changes.",
+          "The tip commit that was previously HEAD becomes unreachable from the branch but is usually recoverable via reflog temporarily.",
+          "Untracked files are not deleted by git reset --hard."
+        ],
+        "assumptions": [
+          "You are on a normal branch with HEAD pointing to the tip commit (not in a detached-HEAD state).",
+          "No special options like --keep/--merge are in effect; behavior described is standard reset semantics.",
+          "The question concerns effects on tracked files; untracked/ignored handling is explicitly noted."
+        ],
+        "expected_consensus": "Most capable models will say it moves HEAD/branch back one commit and makes both index and working tree match that earlier commit, thereby discarding the last commit from the branch and wiping any uncommitted tracked changes; many will also mention reflog recoverability and that untracked files remain.",
+        "normalized": false,
+        "latency_ms": 8646,
+        "cost_micros": 7556
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 5,
+      "type": "panel.answer",
+      "ts": "2026-08-13T07:59:18.657711Z",
+      "payload": {
+        "model": "deepseek/deepseek-v3.2",
+        "answer": "The command `git reset --hard HEAD~1` moves the current branch pointer back by one commit, discards that commit from the branch history, and resets both the staging area (index) and the working directory to match the state of the new HEAD commit (the commit before the last one). Any uncommitted changes in the working tree (whether staged or unstaged) are permanently lost.",
+        "key_claims": [
+          "The command moves the current branch pointer to the commit referenced by HEAD~1.",
+          "The commit that was at HEAD before the reset is removed from the branch's commit history.",
+          "The staging area (index) is overwritten with the content of the new HEAD commit.",
+          "The working directory is overwritten with the content of the new HEAD commit.",
+          "Any uncommitted changes in the working tree (staged or unstaged) are discarded and cannot be recovered."
+        ],
+        "assumptions": [
+          "The repository is in a normal state (not in the middle of a merge conflict or other special state).",
+          "HEAD is a direct reference to a branch (i.e., not in a detached HEAD state), though the effect on the branch pointer is similar in detached HEAD.",
+          "There is at least one commit in the history (so HEAD~1 exists).",
+          "The user understands that 'discarded' means the changes are permanently lost unless they were previously committed elsewhere (e.g., in another branch)."
+        ],
+        "expected_consensus": "Most other capable models will state that `git reset --hard HEAD~1` removes the last commit, resets the working directory and staging area to the previous commit, and discards any uncommitted changes.",
+        "normalized": false,
+        "latency_ms": 14606,
+        "cost_micros": 307
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 6,
+      "type": "panel.answer",
+      "ts": "2026-08-13T07:59:18.706477Z",
+      "payload": {
+        "model": "qwen/qwen3-max",
+        "answer": "`git reset --hard HEAD~1` discards the most recent commit (moves the current branch pointer to the parent of HEAD) and overwrites the working tree and index to match that parent commit, thereby permanently deleting both the last commit and any uncommitted changes in the working directory and staging area.",
+        "key_claims": [
+          "`git reset --hard HEAD~1` moves the current branch reference to the parent of the current HEAD commit.",
+          "The `--hard` option resets both the index (staging area) and the working tree to match the target commit (HEAD~1).",
+          "Any uncommitted changes in the working tree or index are irreversibly lost after this command.",
+          "The commit previously at HEAD becomes unreachable (unless referenced elsewhere) and may be garbage-collected."
+        ],
+        "assumptions": [
+          "The repository is in a normal state (not in the middle of a merge, rebase, etc.).",
+          "HEAD refers to a regular commit with a parent (i.e., not the initial commit).",
+          "The user has appropriate permissions to modify the working tree files."
+        ],
+        "expected_consensus": "Most capable models will correctly state that `git reset --hard HEAD~1` removes the last commit and discards all uncommitted changes, resetting both the working directory and staging area to the state of the previous commit.",
+        "normalized": false,
+        "latency_ms": 9214,
+        "cost_micros": 1424
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 7,
+      "type": "model.call",
+      "ts": "2026-08-13T07:59:18.765480Z",
+      "payload": {
+        "role": "panel",
+        "slug": "openai/gpt-5.2",
+        "upstream_provider": "OpenAI",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786603814-gRld2HZbseMwlG9XHuNX",
+        "call_key": "1e890e2759f07cbd57c0482d36b45c0f",
+        "prompt_tokens": 486,
+        "completion_tokens": 479,
+        "cost_micros": 7556,
+        "latency_ms": 8646
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 8,
+      "type": "model.call",
+      "ts": "2026-08-13T07:59:18.765505Z",
+      "payload": {
+        "role": "panel",
+        "slug": "deepseek/deepseek-v3.2",
+        "upstream_provider": "SiliconFlow",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786603815-ZIuxmeyxuwPjlYsg8EiH",
+        "call_key": "49cbe27ef2d5e00462449f0d5c6a47d6",
+        "prompt_tokens": 654,
+        "completion_tokens": 365,
+        "cost_micros": 307,
+        "latency_ms": 14606
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 9,
+      "type": "model.call",
+      "ts": "2026-08-13T07:59:18.765512Z",
+      "payload": {
+        "role": "panel",
+        "slug": "qwen/qwen3-max",
+        "upstream_provider": "Alibaba",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786603814-ezN0TTjc9VdpaXx5GfKz",
+        "call_key": "93a6868c942c07e4fde5f4785bc935bc",
+        "prompt_tokens": 360,
+        "completion_tokens": 293,
+        "cost_micros": 1424,
+        "latency_ms": 9214
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 10,
+      "type": "stage.entered",
+      "ts": "2026-08-13T07:59:18.922687Z",
+      "payload": {
+        "stage": "compare"
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 11,
+      "type": "model.call",
+      "ts": "2026-08-13T08:00:00.332745Z",
+      "payload": {
+        "role": "comparator",
+        "slug": "google/gemini-2.5-pro",
+        "upstream_provider": "Google",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786607959-Uaw9uikWaDfyKNPhmcmD",
+        "call_key": "d901c3a8f001c6dfbb11ef983c262e34",
+        "prompt_tokens": 2277,
+        "completion_tokens": 4078,
+        "cost_micros": 0,
+        "latency_ms": 41183
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 12,
+      "type": "compare.verdict",
+      "ts": "2026-08-13T08:00:00.405347Z",
+      "payload": {
+        "verdict": "material",
+        "justification": "The answers disagree on two critical, factual points that affect user actions: 1) whether the discarded commit is permanently lost or recoverable via `git reflog`, which determines if a user tries to recover from a mistake, and 2) whether untracked files are deleted, which determines if a user needs to back them up before running the command. Answer A correctly states the commit is recoverable and untracked files are safe, while B and C incorrectly state the commit is permanently lost and omit any mention of untracked files.",
+        "unstable": false,
+        "stances": [
+          {
+            "id": "s1",
+            "summary": "Moves HEAD back one commit and discards tracked changes, but the commit is recoverable via reflog and untracked files are safe.",
+            "members": [
+              "openai/gpt-5.2"
+            ],
+            "strongest": "openai/gpt-5.2"
+          },
+          {
+            "id": "s2",
+            "summary": "Moves HEAD back one commit, permanently discarding the commit and all uncommitted changes.",
+            "members": [
+              "qwen/qwen3-max",
+              "deepseek/deepseek-v3.2"
+            ],
+            "strongest": "qwen/qwen3-max"
+          }
+        ],
+        "dispute_count": 2
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 13,
+      "type": "stage.entered",
+      "ts": "2026-08-13T08:00:00.454514Z",
+      "payload": {
+        "stage": "resolve"
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 14,
+      "type": "dispute.opened",
+      "ts": "2026-08-13T08:00:00.558479Z",
+      "payload": {
+        "id": "d1",
+        "type": "factual",
+        "question": "Is the commit removed by `git reset --hard` permanently lost or is it recoverable?",
+        "decision_impact": "If the commit is permanently lost, a user who runs the command by mistake will believe their work is gone and will not attempt to recover it. If the commit is recoverable via the reflog, the user can take steps to restore it.",
+        "positions": {
+          "s1": "The commit is not permanently lost and can typically be recovered using `git reflog`.",
+          "s2": "The commit is permanently lost or deleted."
+        },
+        "search_query": "git recover commit after reset hard"
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 15,
+      "type": "dispute.opened",
+      "ts": "2026-08-13T08:00:00.607856Z",
+      "payload": {
+        "id": "d2",
+        "type": "factual",
+        "question": "Does `git reset --hard` affect untracked files in the working directory?",
+        "decision_impact": "If untracked files are deleted by the command, a user must back them up before running it. If untracked files are not affected, this precaution is unnecessary.",
+        "positions": {
+          "s1": "No, untracked files are not removed.",
+          "s2": "The command discards uncommitted changes, without specifying that untracked files are an exception. This implies they may be at risk."
+        },
+        "search_query": "does git reset hard delete untracked files"
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 16,
+      "type": "verify.result",
+      "ts": "2026-08-13T08:00:09.226405Z",
+      "payload": {
+        "dispute_id": "d1",
+        "outcome": "supports",
+        "winning_stance": "s1",
+        "summary": "Multiple sources confirm that commits removed by `git reset --hard` are not permanently lost and can be recovered using `git reflog`. [stackoverflow.com](https://stackoverflow.com/questions/5473/how-can-i-undo-git-reset-hard-head1) states: \"You can get the commit back so long as it's been within a few days\" and explains that \"If you have not yet garbage collected your repository... then your commit is still there \u2013 it's just no longer reachable through the HEAD.\" [github.blog](https://github.blog/open-source/git/how-to-undo-almost-anything-with-git/) confirms: \"git reflog is an amazing resource for recovering project history. You can recover almost anything\u2014anything you've committed\u2014via the reflog.\" [stackoverflow.com](https://stackoverflow.com/questions/54799084/do-git-commits-ever-get-deleted-after-resetting-the-branch) explains the timeline: reflog entries remain for at least 30 days by default, with entries that are ancestors remaining for 90 days. The sources do note that recovery is not permanent\u2014Git will eventually garbage collect after weeks or months\u2014but during the typical window, `git reflog` enables recovery. Position s1 is supported; s2's claim of permanent loss is contradicted by the evidence. | Multiple sources confirm that commits removed by `git reset --hard` are not permanently lost and can be recovered. [github.blog](https://github.blog/open-source/git/how-to-undo-almost-anything-with-git/) states that `git reflog` is \"an amazing resource for recovering project history. You can recover almost anything\u2014anything you've committed\u2014via the reflog.\" [stackoverflow.com](https://stackoverflow.com/questions/54799084/do-git-commits-ever-get-deleted-after-resetting-the-branch) explains that \"the commit that was previously the HEAD is still in your local repo\" after `git reset --hard`, and that commits \"live until `git gc` cleans them up,\" with reflog entries remaining \"for at least 30 days\" by default, and \"at least 90 days\" if they are ancestors of the current branch tip. [gitready.com](https://gitready.com/advanced/2009/01/17/restoring-lost-commits.html) confirms: \"as long as you haven't run `git gc` since the reset, you should be able to recover your lost commit.\" Position s2 (permanently lost or deleted) is contradicted by these sources.",
+        "queries": [
+          "git recover commit after reset hard",
+          "git recover commit after reset hard"
+        ],
+        "citations": [
+          {
+            "url": "https://stackoverflow.com/questions/5473/how-can-i-undo-git-reset-hard-head1",
+            "title": "How can I undo git reset --hard HEAD~1?",
+            "snippet": "Pat Notz is correct. You can get the commit back so long as it's been within a few days. git only garbage collects after about a month or so unless you explicitly tell it to remove newer blobs.\n\n...\n\n$ git reflog\n1a75c1d... HEAD@{0}: reset --hard HEAD^: updating HEAD\n\n...\n\nYou can see in the example that the file2 was removed as a result of the hard reset, but was put back in place when I reset vi",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://git-scm.com/docs/git-reset.html",
+            "title": "Git - git-reset Documentation",
+            "snippet": "Undo commits permanently\n\n...\n\n`--hard`\n\n...\n\nOverwrite all files and directories with the version from, and may overwrite untracked files. Tracked files not in are removed so that the working tree matches.\n\n...\n\nthe index to match the new`HEAD`, so nothing will be staged.\n\n...\n\nThe last three commits (`HEAD`,`HEAD^`, and`HEAD~2`) were bad and you do not want to ever see them again. Do not do this",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://github.blog/open-source/git/how-to-undo-almost-anything-with-git/",
+            "title": "How to undo (almost) anything with Git - The GitHub Blog",
+            "snippet": "Undo with:`git reflog` and`git reset` or`git checkout`\n\n...\n\nWhat\u2019s happening:`git reflog` is an amazing resource for recovering project history. You can recover almost anything\u2014anything you\u2019ve committed\u2014via the reflog.\n\n...\n\n- `git reflog` doesn\u2019t last forever. Git will periodically clean up objects which are \u201cunreachable.\u201d Don\u2019t expect to find months-old commits lying around in the reflog foreve",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://stackoverflow.com/questions/54799084/do-git-commits-ever-get-deleted-after-resetting-the-branch",
+            "title": "Do git commits ever get deleted after resetting the branch?",
+            "snippet": "They live until `git gc` cleans them up, as WofWca said, but precisely when that occurs can be a bit difficult to pin down.\n\n...\n\n1. Each reference\u2014and branch names are references whose full name starts with `refs/heads/`\u2014may have a _reflog_. The reflog stores _reflog entries_, which are time-stamped records that say, in effect, this reference was set to hash ID _H_ at date _D_. This allows Git to",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.golinuxcloud.com/git-reflog-tutorial/",
+            "title": "Git Reflog Tutorial with Tested Examples to Recover Commits and Branches",
+            "snippet": "## Git Reflog Expiration and Limitations\n\n...\n\nReflog is powerful, but it is not permanent backup.\n\n...\n\nYou can restore it by resetting back to the reflog entry:\n\n...\n\n- If a commit is no longer reachable and its reflog entry expires, Git may eventually remove the object.\n\n...\n\n- Reflog entries can expire and be pruned by Git garbage collection.",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://github.blog/open-source/git/how-to-undo-almost-anything-with-git/",
+            "title": "How to undo (almost) anything with Git - The GitHub Blog",
+            "snippet": "What\u2019s happening:`git reset` rewinds your repository\u2019s history all the way back to the specified SHA. It\u2019s as if those commits never happened. By default,`git reset` preserves the working directory. The commits are gone, but the contents are still on disk. This is the safest option, but often, you\u2019ll want to \u201cundo\u201d the commits and the changes in one move\u2014that\u2019s what`--hard` does.\n\n...\n\nUndo with:`",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://stackoverflow.com/questions/54799084/do-git-commits-ever-get-deleted-after-resetting-the-branch",
+            "title": "Do git commits ever get deleted after resetting the branch?",
+            "snippet": "They live until `git gc` cleans them up, as WofWca said, but precisely when that occurs can be a bit difficult to pin down.\n\n...\n\n1. Each reference\u2014and branch names are references whose full name starts with `refs/heads/`\u2014may have a _reflog_. The reflog stores _reflog entries_, which are time-stamped records that say, in effect, this reference was set to hash ID _H_ at date _D_. This allows Git to",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://stackoverflow.com/questions/5473/how-can-i-undo-git-reset-hard-head1",
+            "title": "How can I undo git reset --hard HEAD~1?",
+            "snippet": "Pat Notz is correct. You can get the commit back so long as it's been within a few days. git only garbage collects after about a month or so unless you explicitly tell it to remove newer blobs.\n\n...\n\nYou can see in the example that the file2 was removed as a result of the hard reset, but was put back in place when I reset via the reflog.\n\n...\n\nBut don't wait too long... after a few weeks git will ",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://stackoverflow.com/questions/62857459/git-reset-hard-recover",
+            "title": "git reset --hard recover",
+            "snippet": "Now, you say that `git reflog` is \"not working\". Well according to the documentation, `git reset --hard` doesn't affect the reflog.\n\n...\n\nI am guessing your \"not working\" means that it won't get back the _uncommitted_ files.\n\n...\n\nso, I'm afraid you are out of luck. Those files are gone1.\n\n...\n\n1. If there were uncommitted changes when you did the `git reset --hard` they are not recoverable. Git o",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://gitready.com/advanced/2009/01/17/restoring-lost-commits.html",
+            "title": "Restoring lost commits",
+            "snippet": "To apply the lost commit back onto your current branch, you can use the`git merge` command:\n\n...\n\nlong as you haven\u2019t run`git gc` since the reset, you should be able to recover your lost commit.\n\n...\n\nyou reset, the discarded commit enters a \u201cdangling\u201d state, remaining in Git\u2019s datastore until garbage collection runs.\n\n...\n\nSo, you just executed`git reset --hard HEAD^` and discarded your last comm",
+            "start_index": 0,
+            "end_index": 0
+          }
+        ],
+        "supporting_urls": [
+          "https://github.blog/open-source/git/how-to-undo-almost-anything-with-git/",
+          "https://gitready.com/advanced/2009/01/17/restoring-lost-commits.html",
+          "https://stackoverflow.com/questions/5473/how-can-i-undo-git-reset-hard-head1",
+          "https://stackoverflow.com/questions/54799084/do-git-commits-ever-get-deleted-after-resetting-the-branch"
+        ]
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 17,
+      "type": "dispute.closed",
+      "ts": "2026-08-13T08:00:09.279721Z",
+      "payload": {
+        "dispute_id": "d1",
+        "mechanism": "verification",
+        "resolved": true,
+        "winning_stance": "s1",
+        "rounds": 0,
+        "note": "evidence beats rhetoric"
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 18,
+      "type": "verify.result",
+      "ts": "2026-08-13T08:00:09.326600Z",
+      "payload": {
+        "dispute_id": "d2",
+        "outcome": "supports",
+        "winning_stance": "s1",
+        "summary": "Multiple sources confirm that `git reset --hard` does NOT affect untracked files. [git-scm.com](https://git-scm.com/docs/git-reset.html) documents that the command updates tracked files and the index, but [stackoverflow.com](https://stackoverflow.com/questions/36349351/git-reset-hard-doesnt-make-the-working-tree-look-like-index) explicitly states: \"Remember that resetting only affects tracked files, so a separate command is required for cleaning up untracked ones\" and \"There is one important rule that Git will always follow (unless explicitly told not to do it): Do not touch untracked file.\" The same source explains that Git has a safety mechanism: \"Using the default functionality, Git will never perform any action that will end up in a data loss of untracked files\" because \"information from untracked files can never be recovered by Git.\" To remove untracked files, a separate command (`git clean`) is required. Position s1 is correct; s2's implication that untracked files may be at risk is contradicted by the sources. | Multiple official Git documentation sources explicitly state that `git reset --hard` does NOT affect untracked files. [git-scm.com](https://git-scm.com/docs/git-reset.html) states the command \"may overwrite untracked files\" in the context of describing what happens to tracked files, but clarifies that untracked files are not removed. [stackoverflow.com](https://stackoverflow.com/questions/34149356/what-exactly-is-the-difference-between-all-the-git-reset-modes) provides a detailed comparison table showing \"Untracked files\" with dashes across all reset modes, explicitly noting \"(Spoiler: No)\" untracked files will be changed. The documentation consistently distinguishes between tracked and untracked files, with untracked files remaining untouched. Position s1 is correct: untracked files are not removed by `git reset --hard`. Position s2's implication that untracked files \"may be at risk\" is not supported by the sources.",
+        "queries": [
+          "does git reset hard delete untracked files",
+          "does git reset hard delete untracked files"
+        ],
+        "citations": [
+          {
+            "url": "https://git-scm.com/docs/git-reset.html",
+            "title": "Git - git-reset Documentation",
+            "snippet": "Overwrite all files and directories with the version from, and may overwrite untracked files. Tracked files not in are removed so that the working tree matches. Update the index to match the new`HEAD`, so nothing will be staged.\n\n...\n\n`--hard`\n\n...\n\n\"pull\" has not made merge commit, so`git``reset``--hard` which is a synonym for`git``reset``--hard``HEAD` clears the mess from the index file and the ",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://git-scm.dev/docs/git-reset",
+            "title": "Git - git-reset Documentation",
+            "snippet": "`--hard`\n...\nOverwrite all files and directories with the version from, and may overwrite untracked files. Tracked files not in are removed so that the working tree matches. Update the index to match the new`HEAD`, so nothing will be staged.",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://stackoverflow.com/questions/36349351/git-reset-hard-doesnt-make-the-working-tree-look-like-index",
+            "title": "git reset --hard doesn't make the working tree look like index?",
+            "snippet": "Any changes to tracked files in the working tree since <commit> are discarded.\n\n...\n\nResets the index and working tree.\n\n...\n\nThe git clean command is often executed in conjunction with git reset --hard.\n\n...\n\ngit reset --hard will affect the index and the working directory.\n\n...\n\nRemember that resetting only affects tracked files, so a separate command is required for cleaning up untracked ones.\n",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://code.googlesource.com/git/+/HEAD/Documentation/git-reset.adoc",
+            "title": "Documentation/git-reset.adoc - git - Git at Google",
+            "snippet": "| Overwrite all files and directories with the version from _ _, |\n\n...\n\n| and may overwrite untracked files.\n\n...\n\n| removed so that the working tree matches _ _.\n\n...\n\n| `--hard`:: |\n\n...\n\ned files not in _ _ are |\n\n...\n\n| Update the index to match the new `HEAD`, so nothing will be staged.",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://stackoverflow.com/questions/34149356/what-exactly-is-the-difference-between-all-the-git-reset-modes",
+            "title": "What exactly is the difference between all the Git Reset modes?",
+            "snippet": "\"Untracked files\": whether untracked files in the working directory will be changed. (Spoiler: No)\n\n...\n\nUntracked files | - | - | - | - | - | -\n\n...\n\nTracked files | - | - | Change | Change | Change |Change\n\n...\n\n\"Tracked files\": whether files in the working directory will be changed if switching to a commit that affects them\n\n...\n\nhard: discard staged, discard unstaged, update working (unsafe)\n\n",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://git-scm.com/docs/git-reset.html",
+            "title": "Git - git-reset Documentation",
+            "snippet": "Overwrite all files and directories with the version from, and may overwrite untracked files. Tracked files not in are removed so that the working tree matches. Update the index to match the new`HEAD`, so nothing will be staged.\n\n...\n\n`--hard`\n\n...\n\n\"pull\" has not made merge commit, so`git``reset``--hard` which is a synonym for`git``reset``--hard``HEAD` clears the mess from the index file and the ",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.kernel.org/pub/software/scm/git/docs/git-reset.html",
+            "title": "git-reset(1)",
+            "snippet": "`--hard`\n...\nOverwrite all files and directories with the version from, and may overwrite untracked files. Tracked files not in are removed so that the working tree matches. Update the index to match the new`HEAD`, so nothing will be staged.",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://git-scm.dev/docs/git-reset",
+            "title": "Git - git-reset Documentation",
+            "snippet": "`--hard`\n...\nOverwrite all files and directories with the version from, and may overwrite untracked files. Tracked files not in are removed so that the working tree matches. Update the index to match the new`HEAD`, so nothing will be staged.",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://code.googlesource.com/git/+/HEAD/Documentation/git-reset.adoc",
+            "title": "Documentation/git-reset.adoc - git - Git at Google",
+            "snippet": "| Overwrite all files and directories with the version from _ _, |\n\n...\n\n| and may overwrite untracked files.\n\n...\n\n| `--hard`:: |\n\n...\n\n| removed so that the working tree matches _ _.\n\n...\n\ned files not in _ _ are |\n\n...\n\nthe index to match the new `HEAD`, so nothing will be staged.\n\n...\n\n|\n\n...\n\ncan",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://stackoverflow.com/questions/34149356/what-exactly-is-the-difference-between-all-the-git-reset-modes",
+            "title": "What exactly is the difference between all the Git Reset modes?",
+            "snippet": "Untracked files | - | - | - | - | - | -\n\n...\n\n\"Untracked files\": whether untracked files in the working directory will be changed. (Spoiler: No)\n\n...\n\nTracked files | - | - | Change | Change | Change |Change\n\n...\n\nhard: discard staged, discard unstaged, update working (unsafe)\n\n...\n\n\"Tracked files\": whether files in the working directory will be changed if switching to a commit that affects them\n\n",
+            "start_index": 0,
+            "end_index": 0
+          }
+        ],
+        "supporting_urls": [
+          "https://git-scm.com/docs/git-reset.html",
+          "https://stackoverflow.com/questions/34149356/what-exactly-is-the-difference-between-all-the-git-reset-modes",
+          "https://stackoverflow.com/questions/36349351/git-reset-hard-doesnt-make-the-working-tree-look-like-index"
+        ]
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 19,
+      "type": "dispute.closed",
+      "ts": "2026-08-13T08:00:09.376950Z",
+      "payload": {
+        "dispute_id": "d2",
+        "mechanism": "verification",
+        "resolved": true,
+        "winning_stance": "s1",
+        "rounds": 0,
+        "note": "evidence beats rhetoric"
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 20,
+      "type": "model.call",
+      "ts": "2026-08-13T08:00:09.424539Z",
+      "payload": {
+        "role": "verifier",
+        "slug": "anthropic/claude-haiku-4.5",
+        "upstream_provider": "Amazon Bedrock",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786608000-JamB0OlVEnhLs2J41ImN",
+        "call_key": "9ab4c7e416930c2bdb1a6db9d4f19b0d",
+        "prompt_tokens": 2363,
+        "completion_tokens": 310,
+        "cost_micros": 10913,
+        "latency_ms": 6310
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 21,
+      "type": "model.call",
+      "ts": "2026-08-13T08:00:09.424567Z",
+      "payload": {
+        "role": "verifier",
+        "slug": "anthropic/claude-haiku-4.5",
+        "upstream_provider": "Amazon Bedrock",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786608000-WgbrArTdhWC1tG2bDIot",
+        "call_key": "31a25299eb73f209f3118d1c6325e344",
+        "prompt_tokens": 2513,
+        "completion_tokens": 332,
+        "cost_micros": 11173,
+        "latency_ms": 6315
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 22,
+      "type": "model.call",
+      "ts": "2026-08-13T08:00:09.424579Z",
+      "payload": {
+        "role": "verifier",
+        "slug": "anthropic/claude-haiku-4.5",
+        "upstream_provider": "Amazon Bedrock",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786608000-DeQ9fa8Z3lULNUeyqrmD",
+        "call_key": "6ba9c219cb986b2ee33a51b2a63446d8",
+        "prompt_tokens": 3291,
+        "completion_tokens": 396,
+        "cost_micros": 12271,
+        "latency_ms": 8193
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 23,
+      "type": "model.call",
+      "ts": "2026-08-13T08:00:09.424589Z",
+      "payload": {
+        "role": "verifier",
+        "slug": "anthropic/claude-haiku-4.5",
+        "upstream_provider": "Amazon Bedrock",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786608000-KOIxLXs68ZFgCWVJVlxT",
+        "call_key": "3f2089b5944a2d7b0263e45197cc7492",
+        "prompt_tokens": 3143,
+        "completion_tokens": 423,
+        "cost_micros": 12258,
+        "latency_ms": 8462
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 24,
+      "type": "stage.entered",
+      "ts": "2026-08-13T08:00:09.617471Z",
+      "payload": {
+        "stage": "finalize"
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 25,
+      "type": "ladder.rung",
+      "ts": "2026-08-13T08:00:09.711894Z",
+      "payload": {
+        "rung": 2,
+        "label": "verified",
+        "resolution": "verified",
+        "confidence": "high",
+        "winning_stance": "s1",
+        "tie_break_reason": null,
+        "unresolved": [],
+        "branches": []
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 26,
+      "type": "model.call",
+      "ts": "2026-08-13T08:00:22.724468Z",
+      "payload": {
+        "role": "synthesizer",
+        "slug": "anthropic/claude-sonnet-5",
+        "upstream_provider": "Amazon Bedrock",
+        "routing_unpinned": true,
+        "generation_id": "gen-1786608012-rFAdTW5g2AcyOmFa2gI4",
+        "call_key": "58507554b0460a3464ee9a8d14a03cea",
+        "prompt_tokens": 3259,
+        "completion_tokens": 646,
+        "cost_micros": 12978,
+        "latency_ms": 10072
+      }
+    },
+    {
+      "run_id": "01KZX23XVNPYN7S1BG6J7G6FX7",
+      "seq": 27,
+      "type": "run.final",
+      "ts": "2026-08-13T08:00:22.772540Z",
+      "payload": {
+        "final_answer": "`git reset --hard HEAD~1` moves the current branch pointer (and `HEAD`) back one commit, to the parent of the current commit, and then forces both the index (staging area) and the working tree to exactly match that parent commit.\n\nEffect on the last commit: it is removed from the branch's history \u2014 it's no longer reachable from the branch tip \u2014 but it is typically recoverable for a period of time via `git reflog` (as long as garbage collection hasn't run). Reflog entries are commonly retained for at least 30 days, and at least 90 days if the commit is an ancestor of the branch tip, though eventually `git gc` can clean them up permanently.\n\nEffect on uncommitted changes: any staged and unstaged modifications to tracked files are discarded and overwritten to match the parent commit. Untracked files are left untouched \u2014 Git's reset does not delete them; a separate command (`git clean`) is required to remove untracked files.",
+        "label": "verified",
+        "resolution": "verified",
+        "confidence": "high",
+        "caveats": [
+          "Position(s) s2 were set aside because cited sources settled an axis against them; they could not then win on a head-count.",
+          "Surviving dissent (s2): one position holds that the reset 'permanently discards the commit and all uncommitted changes.' This was not adopted \u2014 evidence (reflog behavior documented via Stack Overflow and GitHub's own blog, and Git's handling of untracked files) shows the commit is generally recoverable via `git reflog` for a window of time, and untracked files are never touched by `--hard` reset.",
+          "This would change if: recovery via reflog is not truly available in your situation \u2014 e.g., if `git gc` has already run and pruned unreachable commits, or enough time (30\u201390+ days) has passed for reflog entries to expire, making the commit unrecoverable in practice.",
+          "Read as a reset of tracked changes and history reachability only \u2014 if you meant whether untracked files might also be lost, the answer changes to: no, untracked files are unaffected by `--hard` reset and require a separate `git clean` to remove."
+        ],
+        "rung": 2,
+        "tie_break_reason": null,
+        "unresolved_disputes": [],
+        "dissent": "oblivious",
+        "panel": [
+          "openai/gpt-5.2",
+          "deepseek/deepseek-v3.2",
+          "qwen/qwen3-max"
+        ],
+        "referees": [
+          {
+            "role": "comparator",
+            "slug": "google/gemini-2.5-pro",
+            "prompt_version": "comparator_v1",
+            "off_panel": true
+          },
+          {
+            "role": "verifier",
+            "slug": "anthropic/claude-haiku-4.5",
+            "prompt_version": "verifier_v1",
+            "off_panel": true
+          },
+          {
+            "role": "synthesizer",
+            "slug": "anthropic/claude-sonnet-5",
+            "prompt_version": "synthesizer_v1",
+            "off_panel": true
+          },
+          {
+            "role": "normalizer",
+            "slug": "openai/gpt-5.6-luna",
+            "prompt_version": "normalizer_v1",
+            "off_panel": true
+          },
+          {
+            "role": "red_team",
+            "slug": "x-ai/grok-4.6",
+            "prompt_version": "redteam_v1",
+            "off_panel": true
+          }
+        ],
+        "gate_validated": true,
+        "calls": 9,
+        "cost_micros": 68880,
+        "duration_ms": 64838
+      }
+    }
+  ]
+}

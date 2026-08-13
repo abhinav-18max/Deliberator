@@ -1,0 +1,503 @@
+{
+  "run": {
+    "_id": "01KZWY7GRQN32BKBJVJYEHVX2Z",
+    "request": {
+      "task": "A team of 6 engineers is starting a new B2B SaaS product. Should they use a monorepo or separate repositories? Give a recommendation.",
+      "context": null,
+      "models": [
+        "openai/gpt-5.2",
+        "deepseek/deepseek-v3.2",
+        "qwen/qwen3-max"
+      ],
+      "mode": "fast",
+      "overrides": [],
+      "default_model": null
+    },
+    "status": "complete",
+    "stage": "finalize",
+    "created_at": "2026-08-13T06:51:21.239286+00:00",
+    "updated_at": "2026-08-13T06:52:33.001106+00:00",
+    "config_fingerprint": "c492a3bdf6591804",
+    "roles": [
+      {
+        "role": "comparator",
+        "slug": "google/gemini-2.5-pro",
+        "prompt_version": "comparator_v1",
+        "enabled": true,
+        "on_panel": false,
+        "notes": []
+      },
+      {
+        "role": "verifier",
+        "slug": "anthropic/claude-haiku-4.5",
+        "prompt_version": "verifier_v1",
+        "enabled": true,
+        "on_panel": false,
+        "notes": []
+      },
+      {
+        "role": "synthesizer",
+        "slug": "anthropic/claude-sonnet-5",
+        "prompt_version": "synthesizer_v1",
+        "enabled": true,
+        "on_panel": false,
+        "notes": []
+      },
+      {
+        "role": "normalizer",
+        "slug": "openai/gpt-5.6-luna",
+        "prompt_version": "normalizer_v1",
+        "enabled": true,
+        "on_panel": false,
+        "notes": []
+      },
+      {
+        "role": "red_team",
+        "slug": "x-ai/grok-4.6",
+        "prompt_version": "redteam_v1",
+        "enabled": true,
+        "on_panel": false,
+        "notes": []
+      }
+    ],
+    "warnings": [],
+    "calls": 5,
+    "confidence": "high",
+    "cost_micros": 27003,
+    "final": {
+      "final_answer": "Recommendation: start with a monorepo (with clear internal boundaries) for a 6-engineer team building a new B2B SaaS.\n\nWhy this is the better default early on:\n- You\u2019ll change APIs, data models, and shared libraries frequently; a monorepo makes cross-cutting refactors (backend + frontend + infra) atomic and reviewable.\n- It reduces coordination tax: one issue/PR can update multiple components without version pinning or publish/release choreography between repos.\n- Consistent tooling (lint/test/build, CI conventions, dependency management, security scanning) is easier to standardize in one place.\n- Onboarding is simpler: one checkout, one set of scripts, one place to find code.\n\nHow to do it so it doesn't turn into a mess:\n- Create a small set of top-level packages/apps (e.g., /apps/web, /apps/api, /packages/shared, /infra) and enforce ownership with CODEOWNERS.\n- Use a build system that supports caching and 'affected' builds/tests (e.g., Nx/Turborepo/Bazel/Gradle, depending on stack) so CI doesn't run everything on every change.\n- Keep deployables independently deployable even in a monorepo (separate pipelines per service/app; don't require 'big bang' releases).\n- Establish boundaries: avoid deep import chains; treat shared code as versioned packages within the monorepo (even if not published externally).\n\nWhen separate repos become the better choice:\n- Strongly different stacks with minimal shared code and few cross-cutting changes.\n- Organizational scaling (many teams) where repo-level access control/compliance boundaries are required.\n- You need fully independent lifecycles with very different release cadences and ownership, and monorepo tooling/CI can't keep up.\n\nPragmatic rule: start monorepo now, and split later only if the costs become obvious (CI time, access-control needs, or team/ownership scale). Splitting later is usually easier than trying to coordinate many repos during the rapid-change phase of a new product.",
+      "label": "unanimous",
+      "resolution": "unanimous",
+      "confidence": "high",
+      "caveats": [
+        "This recommendation assumes a single team of 6 engineers building one product with a fairly unified stack and frequent cross-cutting changes \u2014 the typical early-stage SaaS scenario. Read as this \u2014 if you meant a scenario where the team is already split into independent sub-teams with distinct stacks, minimal shared code, or hard compliance/access-control boundaries, the answer changes to separate repositories.",
+        "No dissent survived in the deliberation \u2014 the conclusion was unanimous; there is no minority position to weigh.",
+        "The recommendation is explicitly time-bound: it applies to the current stage (small team, rapid iteration). It should be revisited if CI times balloon, access-control/compliance needs emerge, or the org grows into multiple teams with divergent release cadences."
+      ],
+      "rung": 0,
+      "tie_break_reason": null,
+      "unresolved_disputes": [],
+      "dissent": null,
+      "panel": [
+        "qwen/qwen3-max",
+        "openai/gpt-5.2",
+        "deepseek/deepseek-v3.2"
+      ],
+      "referees": [
+        {
+          "role": "comparator",
+          "slug": "google/gemini-2.5-pro",
+          "prompt_version": "comparator_v1",
+          "off_panel": true
+        },
+        {
+          "role": "verifier",
+          "slug": "anthropic/claude-haiku-4.5",
+          "prompt_version": "verifier_v1",
+          "off_panel": true
+        },
+        {
+          "role": "synthesizer",
+          "slug": "anthropic/claude-sonnet-5",
+          "prompt_version": "synthesizer_v1",
+          "off_panel": true
+        },
+        {
+          "role": "normalizer",
+          "slug": "openai/gpt-5.6-luna",
+          "prompt_version": "normalizer_v1",
+          "off_panel": true
+        },
+        {
+          "role": "red_team",
+          "slug": "x-ai/grok-4.6",
+          "prompt_version": "redteam_v1",
+          "off_panel": true
+        }
+      ],
+      "gate_validated": true,
+      "calls": 5,
+      "cost_micros": 27003,
+      "duration_ms": 71604
+    },
+    "label": "unanimous"
+  },
+  "events": [
+    {
+      "run_id": "01KZWY7GRQN32BKBJVJYEHVX2Z",
+      "seq": 1,
+      "type": "run.started",
+      "ts": "2026-08-13T06:51:21.294416Z",
+      "payload": {
+        "task": "A team of 6 engineers is starting a new B2B SaaS product. Should they use a monorepo or separate repositories? Give a recommendation.",
+        "has_context": false,
+        "models": [
+          "openai/gpt-5.2",
+          "deepseek/deepseek-v3.2",
+          "qwen/qwen3-max"
+        ],
+        "mode": "fast",
+        "floor_model": "openai/gpt-5.2",
+        "roles": [
+          {
+            "role": "comparator",
+            "slug": "google/gemini-2.5-pro",
+            "prompt_version": "comparator_v1",
+            "enabled": true,
+            "on_panel": false,
+            "notes": []
+          },
+          {
+            "role": "verifier",
+            "slug": "anthropic/claude-haiku-4.5",
+            "prompt_version": "verifier_v1",
+            "enabled": true,
+            "on_panel": false,
+            "notes": []
+          },
+          {
+            "role": "synthesizer",
+            "slug": "anthropic/claude-sonnet-5",
+            "prompt_version": "synthesizer_v1",
+            "enabled": true,
+            "on_panel": false,
+            "notes": []
+          },
+          {
+            "role": "normalizer",
+            "slug": "openai/gpt-5.6-luna",
+            "prompt_version": "normalizer_v1",
+            "enabled": true,
+            "on_panel": false,
+            "notes": []
+          },
+          {
+            "role": "red_team",
+            "slug": "x-ai/grok-4.6",
+            "prompt_version": "redteam_v1",
+            "enabled": true,
+            "on_panel": false,
+            "notes": []
+          }
+        ],
+        "gate_validated": true,
+        "warnings": [],
+        "config_fingerprint": "c492a3bdf6591804"
+      }
+    },
+    {
+      "run_id": "01KZWY7GRQN32BKBJVJYEHVX2Z",
+      "seq": 2,
+      "type": "stage.entered",
+      "ts": "2026-08-13T06:51:21.396912Z",
+      "payload": {
+        "stage": "guard"
+      }
+    },
+    {
+      "run_id": "01KZWY7GRQN32BKBJVJYEHVX2Z",
+      "seq": 3,
+      "type": "stage.entered",
+      "ts": "2026-08-13T06:51:21.516828Z",
+      "payload": {
+        "stage": "fanout"
+      }
+    },
+    {
+      "run_id": "01KZWY7GRQN32BKBJVJYEHVX2Z",
+      "seq": 4,
+      "type": "panel.answer",
+      "ts": "2026-08-13T06:51:33.575897Z",
+      "payload": {
+        "model": "qwen/qwen3-max",
+        "answer": "The team should use a monorepo.\n\nWith only six engineers and a single new B2B SaaS product, the overhead of managing multiple repositories (CI/CD pipelines, dependency versioning, cross-repo coordination, onboarding) outweighs any perceived benefits of separation. A monorepo simplifies code sharing, ensures atomic changes across services or layers, streamlines testing and deployment, and reduces context-switching costs\u2014all critical for a small, co-located team moving quickly in early-stage development. As the product and team scale significantly (e.g., dozens of microservices or >20 engineers), they can reconsider splitting, but starting with a monorepo is the pragmatic choice.",
+        "key_claims": [
+          "A team of 6 engineers working on a single B2B SaaS product has low organizational complexity.",
+          "Monorepos reduce coordination overhead for small teams building tightly coupled systems.",
+          "Separate repositories introduce unnecessary CI/CD and dependency management complexity at this scale.",
+          "Atomic commits across components are easier in a monorepo, which benefits early-stage product iteration.",
+          "Onboarding and code discovery are simpler in a monorepo for small teams.",
+          "Repository strategy can be revisited later if the system or team grows substantially."
+        ],
+        "assumptions": [
+          "The product is a single cohesive B2B SaaS application, not a suite of unrelated products.",
+          "The six engineers are collaborating closely on the same codebase and product vision.",
+          "The team values development speed, simplicity, and tight feedback loops over strict service isolation.",
+          "There is no pre-existing infrastructure or strong cultural preference for polyrepos in the organization.",
+          "The team has access to tooling that supports efficient monorepo workflows (e.g., selective testing, dependency graphing)."
+        ],
+        "expected_consensus": "Most other capable models will also recommend a monorepo for a small team (6 engineers) starting a single B2B SaaS product, citing reduced overhead, easier collaboration, and simpler tooling as primary reasons. The consensus may slightly vary if models assume a microservices-heavy architecture from day one, but even then, many will still favor a monorepo initially due to team size.",
+        "normalized": false,
+        "latency_ms": 11807,
+        "cost_micros": 2117
+      }
+    },
+    {
+      "run_id": "01KZWY7GRQN32BKBJVJYEHVX2Z",
+      "seq": 5,
+      "type": "panel.answer",
+      "ts": "2026-08-13T06:51:36.703273Z",
+      "payload": {
+        "model": "openai/gpt-5.2",
+        "answer": "Recommendation: start with a monorepo (with clear internal boundaries) for a 6\u2011engineer team building a new B2B SaaS.\n\nWhy this is the better default early on\n- You\u2019ll change APIs, data models, and shared libraries frequently; a monorepo makes cross-cutting refactors (backend + frontend + infra) atomic and reviewable.\n- It reduces \u201ccoordination tax\u201d: one issue/PR can update multiple components without version pinning or publish/release choreography between repos.\n- Consistent tooling (lint/test/build, CI conventions, dependency management, security scanning) is easier to standardize in one place.\n- Onboarding is simpler: one checkout, one set of scripts, one place to find code.\n\nHow to do it so it doesn\u2019t turn into a mess\n- Create a small set of top-level packages/apps (e.g., /apps/web, /apps/api, /packages/shared, /infra) and enforce ownership with CODEOWNERS.\n- Use a build system that supports caching and \u201caffected\u201d builds/tests (e.g., Nx/Turborepo/Bazel/Gradle, depending on stack) so CI doesn\u2019t run everything on every change.\n- Keep deployables independently deployable even in a monorepo (separate pipelines per service/app; don\u2019t require \u201cbig bang\u201d releases).\n- Establish boundaries: avoid deep import chains; treat shared code as versioned packages within the monorepo (even if not published externally).\n\nWhen separate repos become the better choice\n- Strongly different stacks with minimal shared code and few cross-cutting changes.\n- Organizational scaling (many teams) where repo-level access control/compliance boundaries are required.\n- You need fully independent lifecycles with very different release cadences and ownership, and monorepo tooling/CI can\u2019t keep up.\n\nPragmatic rule: start monorepo now, and split later only if the costs become obvious (CI time, access-control needs, or team/ownership scale). Splitting later is usually easier than trying to coordinate many repos during the rapid-change phase of a new product.",
+        "key_claims": [
+          "Early-stage products typically require frequent cross-cutting changes across frontend/backend/shared code.",
+          "A monorepo enables atomic changes and refactors across multiple components without inter-repo versioning overhead.",
+          "Standardizing tooling and CI is simpler in a single repository than across multiple repositories.",
+          "A monorepo can still support independently deployable services via separate pipelines.",
+          "Separate repositories become advantageous mainly when teams/ownership scale, compliance/access boundaries are needed, or components have minimal coupling."
+        ],
+        "assumptions": [
+          "The product will have at least two components (e.g., web app and API) with shared models/utilities.",
+          "The team expects rapid iteration with evolving APIs/data models in the first months.",
+          "There is no strict regulatory or customer-driven requirement for hard repo-level access separation at the start.",
+          "The team is willing to adopt basic monorepo tooling (or at least structure and CI practices) to keep builds/test times reasonable."
+        ],
+        "expected_consensus": "Most capable models will recommend starting with a monorepo for a small team building a new SaaS, with caveats about scaling/compliance and a note that multi-repo can make sense later or for highly decoupled/polyglot systems.",
+        "normalized": false,
+        "latency_ms": 14916,
+        "cost_micros": 11809
+      }
+    },
+    {
+      "run_id": "01KZWY7GRQN32BKBJVJYEHVX2Z",
+      "seq": 6,
+      "type": "panel.answer",
+      "ts": "2026-08-13T06:51:51.291194Z",
+      "payload": {
+        "model": "deepseek/deepseek-v3.2",
+        "answer": "For a team of 6 engineers starting a new B2B SaaS product, I recommend starting with a monorepo. This approach centralizes all code for the frontend, backend, shared libraries, infrastructure-as-code, and tooling in a single repository. It simplifies dependency management, enforces consistent tooling and standards from day one, and makes it easier to implement cross-cutting changes and refactorings as the product evolves rapidly in its early stages. With a team of only 6, the coordination overhead of a monorepo is manageable, and modern tooling (like Turborepo, Nx, or pnpm workspaces) can handle build and test orchestration effectively. The primary risk\u2014repository size and build times\u2014is minimal at the start and can be mitigated with good tooling as the project grows. If, in the future, clear, independently deployable services with distinct lifecycles emerge, the team can consider splitting into a polyrepo setup, but beginning unified is the simpler, more productive default.",
+        "key_claims": [
+          "A monorepo simplifies dependency management and cross-component refactoring for a new product.",
+          "A team of 6 can manage the coordination overhead of a monorepo without significant tooling friction.",
+          "Modern monorepo tooling (e.g., Turborepo, Nx) effectively handles build and test orchestration for small to medium projects.",
+          "Starting with a monorepo enforces consistent tooling and standards across the codebase from the beginning.",
+          "The risk of repository bloat and slow build times is minimal for a new project and can be addressed later.",
+          "A monorepo is easier to split into polyrepos later than it is to merge separate repos into a monorepo."
+        ],
+        "assumptions": [
+          "The B2B SaaS product will consist of multiple logical components (e.g., frontend, backend API, shared libraries, deployment configs).",
+          "The team intends to move quickly and iterate on the product, requiring frequent cross-component changes.",
+          "The team has the technical capability to set up and use modern monorepo tooling.",
+          "The product is starting from scratch, with no legacy code or pre-existing repository structure constraints.",
+          "The team size (6) is expected to remain stable in the near term, and all engineers will work across the full stack or multiple components.",
+          "The primary goal is development velocity and cohesion, not independent, decoupled deployment of services from day one."
+        ],
+        "expected_consensus": "Most other capable models will likely also recommend a monorepo for this scenario, emphasizing benefits like simplified dependency management, unified tooling, and ease of refactoring for a small, co-located team starting a new product. Some may caution about long-term scaling issues but will conclude that starting with a monorepo is the pragmatic choice.",
+        "normalized": false,
+        "latency_ms": 29505,
+        "cost_micros": 323
+      }
+    },
+    {
+      "run_id": "01KZWY7GRQN32BKBJVJYEHVX2Z",
+      "seq": 7,
+      "type": "model.call",
+      "ts": "2026-08-13T06:51:51.343325Z",
+      "payload": {
+        "role": "panel",
+        "slug": "qwen/qwen3-max",
+        "upstream_provider": "Alibaba",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786603881-f6salKXJcJVYtUr55IlV",
+        "call_key": "2e60c0516ba00310080ccf52a41239ad",
+        "prompt_tokens": 359,
+        "completion_tokens": 471,
+        "cost_micros": 2117,
+        "latency_ms": 11807
+      }
+    },
+    {
+      "run_id": "01KZWY7GRQN32BKBJVJYEHVX2Z",
+      "seq": 8,
+      "type": "model.call",
+      "ts": "2026-08-13T06:51:51.343352Z",
+      "payload": {
+        "role": "panel",
+        "slug": "openai/gpt-5.2",
+        "upstream_provider": "OpenAI",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786603881-WYUF1RM44CipTA2kWdJT",
+        "call_key": "aaecd49f7c35c252c0292b77bd50acdf",
+        "prompt_tokens": 484,
+        "completion_tokens": 783,
+        "cost_micros": 11809,
+        "latency_ms": 14916
+      }
+    },
+    {
+      "run_id": "01KZWY7GRQN32BKBJVJYEHVX2Z",
+      "seq": 9,
+      "type": "model.call",
+      "ts": "2026-08-13T06:51:51.343363Z",
+      "payload": {
+        "role": "panel",
+        "slug": "deepseek/deepseek-v3.2",
+        "upstream_provider": "DeepInfra",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786603881-QW6A55RSFb01TIK27BHD",
+        "call_key": "244962ade32bb26a123e63e7e0d392f1",
+        "prompt_tokens": 358,
+        "completion_tokens": 605,
+        "cost_micros": 323,
+        "latency_ms": 29505
+      }
+    },
+    {
+      "run_id": "01KZWY7GRQN32BKBJVJYEHVX2Z",
+      "seq": 10,
+      "type": "stage.entered",
+      "ts": "2026-08-13T06:51:51.624889Z",
+      "payload": {
+        "stage": "compare"
+      }
+    },
+    {
+      "run_id": "01KZWY7GRQN32BKBJVJYEHVX2Z",
+      "seq": 11,
+      "type": "model.call",
+      "ts": "2026-08-13T06:52:19.709502Z",
+      "payload": {
+        "role": "comparator",
+        "slug": "google/gemini-2.5-pro",
+        "upstream_provider": "Google",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786603912-RwsmyqlYIpUSNIv5XTtr",
+        "call_key": "0a83f7196e63b0e1186e9a24050b8b81",
+        "prompt_tokens": 3136,
+        "completion_tokens": 2585,
+        "cost_micros": 0,
+        "latency_ms": 27602
+      }
+    },
+    {
+      "run_id": "01KZWY7GRQN32BKBJVJYEHVX2Z",
+      "seq": 12,
+      "type": "compare.verdict",
+      "ts": "2026-08-13T06:52:19.794278Z",
+      "payload": {
+        "verdict": "none",
+        "justification": "All three models unanimously recommend starting with a monorepo for the same core reasons: simplified dependency management, easier cross-cutting changes, and consistent tooling, which are all beneficial for a small team focused on rapid iteration. The strongest candidate for a disagreement is the level of implementation detail provided; Answer A gives specific advice on structuring the monorepo and using modern tooling, while B and C are more general. This difference would not change what the user does (i.e., choose a monorepo over separate repositories), but rather how well they implement that choice. Therefore, the disagreement is not material.",
+        "unstable": false,
+        "stances": [
+          {
+            "id": "s1",
+            "summary": "Start with a monorepo to simplify development, coordination, and tooling for a small team, and re-evaluate this decision as the team and product scale.",
+            "members": [
+              "openai/gpt-5.2",
+              "deepseek/deepseek-v3.2",
+              "qwen/qwen3-max"
+            ],
+            "strongest": "openai/gpt-5.2"
+          }
+        ],
+        "dispute_count": 0
+      }
+    },
+    {
+      "run_id": "01KZWY7GRQN32BKBJVJYEHVX2Z",
+      "seq": 13,
+      "type": "stage.entered",
+      "ts": "2026-08-13T06:52:19.844406Z",
+      "payload": {
+        "stage": "finalize"
+      }
+    },
+    {
+      "run_id": "01KZWY7GRQN32BKBJVJYEHVX2Z",
+      "seq": 14,
+      "type": "ladder.rung",
+      "ts": "2026-08-13T06:52:19.993430Z",
+      "payload": {
+        "rung": 0,
+        "label": "unanimous",
+        "resolution": "unanimous",
+        "confidence": "high",
+        "winning_stance": "s1",
+        "tie_break_reason": null,
+        "unresolved": [],
+        "branches": []
+      }
+    },
+    {
+      "run_id": "01KZWY7GRQN32BKBJVJYEHVX2Z",
+      "seq": 15,
+      "type": "model.call",
+      "ts": "2026-08-13T06:52:32.793902Z",
+      "payload": {
+        "role": "synthesizer",
+        "slug": "anthropic/claude-sonnet-5",
+        "upstream_provider": "Amazon Bedrock",
+        "routing_unpinned": true,
+        "generation_id": "gen-1786603940-bPvgNIAQ4lo8gHIQzjC2",
+        "call_key": "8a2a4ae9efd5f1d37b7eed6638257993",
+        "prompt_tokens": 1617,
+        "completion_tokens": 952,
+        "cost_micros": 12754,
+        "latency_ms": 12567
+      }
+    },
+    {
+      "run_id": "01KZWY7GRQN32BKBJVJYEHVX2Z",
+      "seq": 16,
+      "type": "run.final",
+      "ts": "2026-08-13T06:52:32.898773Z",
+      "payload": {
+        "final_answer": "Recommendation: start with a monorepo (with clear internal boundaries) for a 6-engineer team building a new B2B SaaS.\n\nWhy this is the better default early on:\n- You\u2019ll change APIs, data models, and shared libraries frequently; a monorepo makes cross-cutting refactors (backend + frontend + infra) atomic and reviewable.\n- It reduces coordination tax: one issue/PR can update multiple components without version pinning or publish/release choreography between repos.\n- Consistent tooling (lint/test/build, CI conventions, dependency management, security scanning) is easier to standardize in one place.\n- Onboarding is simpler: one checkout, one set of scripts, one place to find code.\n\nHow to do it so it doesn't turn into a mess:\n- Create a small set of top-level packages/apps (e.g., /apps/web, /apps/api, /packages/shared, /infra) and enforce ownership with CODEOWNERS.\n- Use a build system that supports caching and 'affected' builds/tests (e.g., Nx/Turborepo/Bazel/Gradle, depending on stack) so CI doesn't run everything on every change.\n- Keep deployables independently deployable even in a monorepo (separate pipelines per service/app; don't require 'big bang' releases).\n- Establish boundaries: avoid deep import chains; treat shared code as versioned packages within the monorepo (even if not published externally).\n\nWhen separate repos become the better choice:\n- Strongly different stacks with minimal shared code and few cross-cutting changes.\n- Organizational scaling (many teams) where repo-level access control/compliance boundaries are required.\n- You need fully independent lifecycles with very different release cadences and ownership, and monorepo tooling/CI can't keep up.\n\nPragmatic rule: start monorepo now, and split later only if the costs become obvious (CI time, access-control needs, or team/ownership scale). Splitting later is usually easier than trying to coordinate many repos during the rapid-change phase of a new product.",
+        "label": "unanimous",
+        "resolution": "unanimous",
+        "confidence": "high",
+        "caveats": [
+          "This recommendation assumes a single team of 6 engineers building one product with a fairly unified stack and frequent cross-cutting changes \u2014 the typical early-stage SaaS scenario. Read as this \u2014 if you meant a scenario where the team is already split into independent sub-teams with distinct stacks, minimal shared code, or hard compliance/access-control boundaries, the answer changes to separate repositories.",
+          "No dissent survived in the deliberation \u2014 the conclusion was unanimous; there is no minority position to weigh.",
+          "The recommendation is explicitly time-bound: it applies to the current stage (small team, rapid iteration). It should be revisited if CI times balloon, access-control/compliance needs emerge, or the org grows into multiple teams with divergent release cadences."
+        ],
+        "rung": 0,
+        "tie_break_reason": null,
+        "unresolved_disputes": [],
+        "dissent": null,
+        "panel": [
+          "qwen/qwen3-max",
+          "openai/gpt-5.2",
+          "deepseek/deepseek-v3.2"
+        ],
+        "referees": [
+          {
+            "role": "comparator",
+            "slug": "google/gemini-2.5-pro",
+            "prompt_version": "comparator_v1",
+            "off_panel": true
+          },
+          {
+            "role": "verifier",
+            "slug": "anthropic/claude-haiku-4.5",
+            "prompt_version": "verifier_v1",
+            "off_panel": true
+          },
+          {
+            "role": "synthesizer",
+            "slug": "anthropic/claude-sonnet-5",
+            "prompt_version": "synthesizer_v1",
+            "off_panel": true
+          },
+          {
+            "role": "normalizer",
+            "slug": "openai/gpt-5.6-luna",
+            "prompt_version": "normalizer_v1",
+            "off_panel": true
+          },
+          {
+            "role": "red_team",
+            "slug": "x-ai/grok-4.6",
+            "prompt_version": "redteam_v1",
+            "off_panel": true
+          }
+        ],
+        "gate_validated": true,
+        "calls": 5,
+        "cost_micros": 27003,
+        "duration_ms": 71604
+      }
+    }
+  ]
+}
