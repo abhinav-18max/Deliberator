@@ -32,21 +32,17 @@ from ..contracts import (
     fence,
 )
 from ..contracts.wire import DebateTurnOut
-from ..prompts.loader import render
+from ..prompts.loader import fragment, render
 from ..providers.base import ProviderError
 
-RE_ASK = (
-    "Your concession did not name a claim from your own original answer. Either name the exact "
-    "claim you are withdrawing, or defend your position. Do not concede without saying what it "
-    "costs you."
-)
+RE_ASK = fragment("concession_reask")
 
 
 def _own_block(stance: Stance, dispute: Dispute, claims: list[str]) -> str:
     position = dispute.positions.get(stance.id, stance.summary)
     body = f"POSITION: {position}\n\nYOUR ORIGINAL CLAIMS:\n"
     body += "\n".join(f"- {c}" for c in claims) or "- (none recorded)"
-    return fence("YOUR POSITION", body)
+    return fence(fragment("debate_own_header"), body)
 
 
 def _opposing_block(
@@ -81,9 +77,10 @@ async def _turn(
     rnd: int,
     previous: dict[str, str] | None,
     timeout_s: float,
+    versions: tuple[str, str],
     extra_instruction: str = "",
 ) -> DebateTurn | None:
-    version = "debate_r1_v1" if rnd == 1 else "debate_r2_v1"
+    version = versions[0] if rnd == 1 else versions[1]
     opponents = [s for s in stances if s.id != stance.id]
     prompt = render(
         version,
@@ -172,6 +169,7 @@ async def run(
     stances: list[Stance],
     round0_claims: dict[str, list[str]],
     *,
+    versions: tuple[str, str],
     max_rounds: int = 2,
     timeout_s: float = 90.0,
 ) -> AsyncIterator[DebateTurn | DisputeOutcome]:
@@ -204,6 +202,7 @@ async def run(
                     rnd=rnd,
                     previous=previous,
                     timeout_s=timeout_s,
+                    versions=versions,
                 )
                 for stance in current
             )
@@ -231,6 +230,7 @@ async def run(
                     rnd=rnd,
                     previous=previous,
                     timeout_s=timeout_s,
+                    versions=versions,
                     extra_instruction=RE_ASK,
                 )
                 candidate = again or turn

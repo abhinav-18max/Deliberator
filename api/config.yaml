@@ -83,6 +83,13 @@ roles:
     off_panel: prefer
     temperature: 0.0
 
+# The re-entrant panel seats. Listed here so all nine prompts are configuration rather than
+# three of them being literals in Python, and so `doctor` checks every one has a file.
+panel_prompts:
+  answer: panel_v1
+  debate_round_1: debate_r1_v1
+  debate_round_2: debate_r2_v1
+
 allow_request_overrides: [synthesizer, verifier]
 
 # (comparator_slug, prompt_version) pairs measured against api/app/evalset/cases.

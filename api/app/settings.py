@@ -42,6 +42,21 @@ class RoleConfig(BaseModel):
     search_engine: Literal["exa", "native"] = "exa"
 
 
+class PanelPrompts(BaseModel):
+    """Prompt versions for the re-entrant panel seats.
+
+    These were literals in Python, which meant three of the system's nine prompts could be
+    swapped without touching configuration and without `doctor` ever checking they existed.
+    """
+
+    answer: str = "panel_v1"
+    debate_round_1: str = "debate_r1_v1"
+    debate_round_2: str = "debate_r2_v1"
+
+    def all(self) -> list[str]:
+        return [self.answer, self.debate_round_1, self.debate_round_2]
+
+
 class VerifiedConfig(BaseModel):
     slug: str
     prompt_version: str
@@ -53,6 +68,7 @@ class Config(BaseModel):
     panel_shortlist: list[str] = Field(default_factory=list)
     panel_default: list[str] = Field(default_factory=list)
     roles: dict[str, RoleConfig]
+    panel_prompts: PanelPrompts = Field(default_factory=PanelPrompts)
     allow_request_overrides: list[str] = Field(default_factory=list)
     verified_configs: list[VerifiedConfig] = Field(default_factory=list)
 
@@ -61,6 +77,7 @@ class Config(BaseModel):
         misread as having been produced by a different configuration."""
         material = {
             "roles": {k: v.model_dump() for k, v in sorted(self.roles.items())},
+            "panel_prompts": self.panel_prompts.model_dump(),
             "caps": self.caps.model_dump(),
         }
         blob = json.dumps(material, sort_keys=True)

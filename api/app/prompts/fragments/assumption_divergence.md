@@ -1,0 +1,1 @@
+ASSUMPTION DIVERGENCE detected mechanically before this call — treat these as candidate interpretation disputes:

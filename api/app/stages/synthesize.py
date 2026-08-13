@@ -24,7 +24,7 @@ from ..contracts import (
 )
 from ..contracts.wire import SynthesisOut
 from ..ladder import LadderResult
-from ..prompts.loader import render
+from ..prompts.loader import fragment, render
 from ..providers.base import ProviderError
 from ..roles import ResolvedRole
 
@@ -60,9 +60,9 @@ def build_brief(
     if winning is None and stances:
         winning = stances[0]
     winning_text = (
-        fence("WINNING POSITION", _stance_text(winning, answers))
+        fence(fragment("brief_winning_header"), _stance_text(winning, answers))
         if winning
-        else fence("WINNING POSITION", "(none identified)")
+        else fence(fragment("brief_winning_header"), "(none identified)")
     )
 
     parts: list[str] = []
@@ -70,7 +70,7 @@ def build_brief(
     dissenting = [s for s in stances if winning is None or s.id != winning.id]
     if dissenting:
         body = "\n\n".join(f"{s.id}: {s.summary}" for s in dissenting)
-        parts.append(fence("SURVIVING DISSENT — name it in caveats, do not blend it in", body))
+        parts.append(fence(fragment("brief_dissent_header"), body))
 
     evidence = [v for v in verifications if v.citations]
     if evidence:
@@ -79,7 +79,7 @@ def build_brief(
             + "\n".join(f"  - {c.title or c.url} ({c.url})" for c in v.citations[:5])
             for v in evidence
         )
-        parts.append(fence("EVIDENCE — cite these where the answer relies on them", body))
+        parts.append(fence(fragment("brief_evidence_header"), body))
 
     branch_disputes = [d for d in disputes if d.id in result.branches]
     if branch_disputes:
@@ -89,10 +89,7 @@ def build_brief(
             for d in branch_disputes
         )
         parts.append(
-            fence(
-                "INTERPRETATION SPLIT — include exactly one conditional line for this",
-                body,
-            )
+fence(fragment("brief_branch_header"), body)
         )
 
     if result.rung is Rung.TIE_BREAK and turns:
@@ -100,14 +97,10 @@ def build_brief(
             f"[{t.stance_id} r{t.round}] STEELMAN: {t.steelman}\nRESPONSE: {t.response}"
             for t in turns
         )
-        parts.append(fence("DEBATE TRANSCRIPT", body))
+        parts.append(fence(fragment("brief_transcript_header"), body))
 
     if result.composition_check:
-        parts.append(
-            "COHERENCE CHECK: different axes were resolved in favour of different positions. "
-            "Verify the combined answer is one a single position-holder would endorse. If it is "
-            "not, write up the winning position's answer alone and say so in caveats."
-        )
+        parts.append(fragment("brief_coherence_check"))
 
     return winning_text, "\n\n".join(parts)
 

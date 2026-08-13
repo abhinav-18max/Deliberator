@@ -16,16 +16,14 @@ from typing import TypeVar
 
 from pydantic import BaseModel, ValidationError
 
+from .prompts.loader import fragment
 from .providers.base import CallSpec, Completion, LLMPort, ModelUnavailable
 
 T = TypeVar("T", bound=BaseModel)
 
 _FENCE = re.compile(r"```(?:json)?\s*(.*?)```", re.DOTALL)
 
-REPAIR_INSTRUCTION = (
-    "Your previous reply did not match the required JSON shape. Return only the JSON object, "
-    "with no prose, no markdown fence, and every required field present."
-)
+REPAIR_INSTRUCTION = fragment("json_repair")
 
 
 @dataclass

@@ -28,7 +28,7 @@ from ..contracts import (
     fence,
 )
 from ..contracts.wire import ComparisonOut
-from ..prompts.loader import render
+from ..prompts.loader import fragment, render
 from ..roles import ResolvedRole
 
 _LABELS = "ABCDEFGH"
@@ -139,8 +139,10 @@ async def run(
     presentation = present(answers, order)
     divergence = assumption_divergence(answers)
     hint = (
-        "\n\nASSUMPTION DIVERGENCE detected mechanically before this call — treat these as "
-        "candidate interpretation disputes:\n" + "\n".join(f"- {d}" for d in divergence)
+        "\n\n"
+        + fragment("assumption_divergence")
+        + "\n"
+        + "\n".join(f"- {d}" for d in divergence)
         if divergence
         else ""
     )

@@ -97,6 +97,61 @@ def test_the_comparator_is_not_caller_overridable():
 def test_every_prompt_version_in_config_has_a_file():
     """A prompt version is part of every call key. A missing file is a runtime failure at the
     worst moment, so it is checked here instead."""
-    config = (Path(__file__).resolve().parents[1] / "config.yaml").read_text()
-    for version in re.findall(r"prompt_version:\s*(\S+)", config):
+    from app.settings import load_config
+
+    cfg = load_config()
+    versions = [role.prompt_version for role in cfg.roles.values()] + cfg.panel_prompts.all()
+    assert len(versions) == 8, "expected five referee seats and three panel seats"
+    for version in versions:
         assert (APP / "prompts" / f"{version}.md").exists(), f"no prompt file for {version}"
+
+
+def test_every_registered_fragment_has_a_file():
+    from app.prompts.loader import FRAGMENTS, fragment
+
+    for name in FRAGMENTS:
+        assert fragment(name).strip(), f"fragment {name} is empty"
+
+
+def test_the_prompt_files_on_disk_are_exactly_the_ones_wired_up():
+    """Bidirectional: nothing configured is missing, and nothing on disk is orphaned.
+
+    An orphan prompt file is worse than a missing one — it reads as live behaviour while nothing
+    loads it, so a reviewer studies wording the system never sends.
+    """
+    from app.prompts.loader import FRAGMENTS
+    from app.settings import load_config
+
+    cfg = load_config()
+    wired = {role.prompt_version for role in cfg.roles.values()} | set(cfg.panel_prompts.all())
+    on_disk = {p.stem for p in (APP / "prompts").glob("*.md")} - {"README"}
+    assert on_disk == wired, f"orphaned: {on_disk - wired}; missing: {wired - on_disk}"
+
+    fragment_files = {p.stem for p in (APP / "prompts" / "fragments").glob("*.md")}
+    assert fragment_files == set(FRAGMENTS), (
+        f"unregistered fragment files: {fragment_files - set(FRAGMENTS)}; "
+        f"registered without a file: {set(FRAGMENTS) - fragment_files}"
+    )
+
+
+def test_prompt_wording_exists_only_in_the_prompts_directory():
+    """No fragment's text may also appear in a .py file.
+
+    This is exact rather than a guess at what instruction language looks like: if someone pastes
+    the data rule or a repair instruction back into Python "for convenience", the wording now
+    lives in two places and the file stops being the source of truth. It does not claim to catch
+    *new* instruction text written directly in Python — that is what review and the fragment
+    registry are for.
+    """
+    from app.prompts.loader import FRAGMENTS, fragment
+
+    sources = {path: path.read_text() for path in APP.rglob("*.py")}
+    for name in FRAGMENTS:
+        text = fragment(name)
+        assert len(text) >= 8, f"fragment {name} is too short to be checked meaningfully"
+        needle = text[:60]
+        for path, source in sources.items():
+            assert needle not in source, (
+                f"fragment {name!r} is duplicated in {path.relative_to(APP)} — load it with "
+                "prompts.loader.fragment() instead of restating it"
+            )

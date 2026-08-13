@@ -1,0 +1,1 @@
+Your previous reply did not match the required JSON shape. Return only the JSON object, with no prose, no markdown fence, and every required field present.

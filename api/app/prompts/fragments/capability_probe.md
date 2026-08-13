@@ -1,0 +1,1 @@
+This is a capability probe, not a real task. Return the minimal valid JSON object for your required output shape, using empty strings, empty arrays and any allowed enum value. Do not add commentary.

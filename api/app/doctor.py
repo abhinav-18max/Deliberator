@@ -10,6 +10,7 @@ import sys
 
 from .calls import Caller
 from .contracts import Role
+from .prompts.loader import fragment
 from .providers import catalog
 from .providers.base import ProviderError
 from .providers.openrouter import OpenRouterProvider
@@ -30,11 +31,7 @@ _SEAT_SCHEMA = {
     Role.RED_TEAM: "red_team",
 }
 
-_PROBE = (
-    "This is a capability probe, not a real task. Return the minimal valid JSON object for "
-    "your required output shape, using empty strings, empty arrays and any allowed enum value. "
-    "Do not add commentary."
-)
+_PROBE = fragment("capability_probe")
 
 
 def _line(status: str, text: str) -> str:

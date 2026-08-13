@@ -129,7 +129,11 @@ class Orchestrator:
         answers: list[PanelAnswer] = []
         dropouts: list[Dropout] = []
         async for item in fanout.run(
-            caller, envelope, request.models, timeout_s=caps.panel_call_timeout_s
+            caller,
+            envelope,
+            request.models,
+            prompt_version=self.cfg.panel_prompts.answer,
+            timeout_s=caps.panel_call_timeout_s,
         ):
             if isinstance(item, Dropout):
                 dropouts.append(item)
@@ -354,6 +358,10 @@ class Orchestrator:
                         dispute,
                         stances,
                         round0_claims,
+                        versions=(
+                            self.cfg.panel_prompts.debate_round_1,
+                            self.cfg.panel_prompts.debate_round_2,
+                        ),
                         max_rounds=caps.max_rounds,
                         timeout_s=caps.per_call_timeout_s,
                     )

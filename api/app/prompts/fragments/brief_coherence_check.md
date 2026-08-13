@@ -1,0 +1,1 @@
+COHERENCE CHECK: different axes were resolved in favour of different positions. Verify the combined answer is one a single position-holder would endorse. If it is not, write up the winning position's answer alone and say so in caveats.
