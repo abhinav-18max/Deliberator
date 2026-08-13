@@ -17,8 +17,8 @@ task ─► GUARD ─► FAN-OUT ─► COMPARE ─┬─► RESOLVE ─► FINA
 
 ## Requirements
 
-Python 3.12+ with [uv](https://docs.astral.sh/uv/), Node 20+, a MongoDB connection string
-(Atlas free tier is fine), and an [OpenRouter](https://openrouter.ai) API key.
+Python 3.12+ with `uv`, Node 20+, a MongoDB connection string (Atlas free tier is fine), and an
+OpenRouter API key.
 
 ## Setup
 
