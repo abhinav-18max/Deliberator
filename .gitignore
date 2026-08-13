@@ -19,3 +19,6 @@ next-env.d.ts
 # os
 .DS_Store
 .gstack/
+
+# next build output (separate dir so it cannot clobber the dev server)
+.next-build/

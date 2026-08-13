@@ -12,7 +12,7 @@ export default function RunPage() {
   const started = events.find((e) => e.type === "run.started");
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="mx-auto flex max-w-5xl flex-col gap-6">
       <section>
         <div className="label">Task</div>
         <p className="mt-1 text-[0.95rem]">

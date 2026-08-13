@@ -63,7 +63,7 @@ export default function Composer() {
   }
 
   return (
-    <div className="flex flex-col gap-7">
+    <div className="mx-auto flex max-w-3xl flex-col gap-7">
       <section>
         <h1 className="text-2xl font-semibold tracking-tight">Ask a panel.</h1>
         <p className="mt-1 max-w-2xl text-sm text-muted">

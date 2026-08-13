@@ -230,13 +230,12 @@ const RUNGS: {
   label: string;
   confidence: string;
   chip: string;
-  note?: string;
 }[] = [
   { indent: 0, y: 36, text: "gate found no material dispute — the bypass", label: "unanimous", confidence: "high", chip: "c-high" },
   { indent: 20, y: 82, text: "1 · debate resolved it — someone conceded and said why", label: "debate-resolved", confidence: "high", chip: "c-high" },
-  { indent: 40, y: 128, text: "2 · evidence settled it — cited spans attached", label: "verified", confidence: "high", chip: "c-high", note: "sources conflict or run out → low, and the caveat says so" },
-  { indent: 60, y: 174, text: "3 · majority — counted only after argument", label: "majority (2/3)", confidence: "medium", chip: "c-med", note: "high if the dissent was oblivious, medium if informed" },
-  { indent: 80, y: 220, text: "4 · tie-break on visible evidence, reason published", label: "tie-break", confidence: "low", chip: "c-low", note: "order: engagement quality → fewer assumptions → informed dissent" },
+  { indent: 40, y: 128, text: "2 · evidence settled it — cited spans attached", label: "verified", confidence: "high", chip: "c-high" },
+  { indent: 60, y: 174, text: "3 · majority — counted only after argument", label: "majority (2/3)", confidence: "medium", chip: "c-med" },
+  { indent: 80, y: 220, text: "4 · tie-break on visible evidence, reason published", label: "tie-break", confidence: "low", chip: "c-low" },
   { indent: 100, y: 266, text: "5 · floor — the default model's answer, alternative named", label: "floor", confidence: "low", chip: "c-low" },
 ];
 
@@ -268,11 +267,6 @@ export function LadderFigure() {
             <text className="lbl-ink" x="675" y={rung.y + 23} textAnchor="middle">{rung.label}</text>
             <rect x="880" y={rung.y + 4} width="70" height="28" rx="4" className={rung.chip} />
             <text className="lbl-ink" x="915" y={rung.y + 23} textAnchor="middle">{rung.confidence}</text>
-            {rung.note && (
-              <text className={rung.label === "verified" ? "lbl hue-r" : "lbl"} x="962" y={rung.y + 23}>
-                {rung.note}
-              </text>
-            )}
           </g>
         );
       })}

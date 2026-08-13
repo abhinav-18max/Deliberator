@@ -278,6 +278,32 @@ export default function Architecture() {
         <LadderFigure />
       </Figure>
 
+      <div className="card -mt-6 p-4">
+        <p className="label">Confidence modifiers</p>
+        <ul className="mt-2 grid gap-2 text-[0.82rem] text-muted sm:grid-cols-2">
+          <li>
+            <span className="font-mono text-[0.7rem] text-ink">majority</span> — high when the
+            surviving dissent was oblivious, medium when it was informed, medium when the
+            dissenter gave no usable prediction to classify.
+          </li>
+          <li>
+            <span className="font-mono text-[0.7rem] text-ink">tie-break order</span> — engagement
+            quality in the transcript, then fewer unstated assumptions, then informed over
+            oblivious dissent. The reason is published with the answer.
+          </li>
+          <li>
+            <span className="font-mono text-[0.7rem] text-alarm">sources conflict</span> — any
+            verification that came back conflicting forces confidence to low, whatever the rung,
+            and the caveat names the fact the public record did not settle.
+          </li>
+          <li>
+            <span className="font-mono text-[0.7rem] text-alarm">gate unvalidated</span> — a
+            comparator config absent from the verified registry demotes one notch, as does a
+            red-team attack that lands on a unanimous panel.
+          </li>
+        </ul>
+      </div>
+
       <section className="flex flex-col gap-5">
         <div>
           <p className="label">Borrowed principles</p>

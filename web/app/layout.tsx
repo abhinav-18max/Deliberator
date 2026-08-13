@@ -12,7 +12,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className="min-h-screen">
         <header className="border-b border-line bg-surface">
-          <div className="mx-auto flex max-w-5xl items-baseline justify-between px-6 py-4">
+          <div className="mx-auto flex max-w-6xl items-baseline justify-between px-6 py-4">
             <Link href="/" className="font-mono text-sm font-semibold tracking-wide">
               DELIBRATOR
             </Link>
@@ -29,7 +29,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </nav>
           </div>
         </header>
-        <main className="mx-auto max-w-5xl px-6 py-8">{children}</main>
+        {/* No width cap here: pages choose their own measure. A form wants a narrow column; the
+            architecture figures want every pixel they can get before their labels shrink. */}
+        <main className="mx-auto w-full max-w-6xl px-6 py-8">{children}</main>
       </body>
     </html>
   );

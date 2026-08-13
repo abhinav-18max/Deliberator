@@ -14,7 +14,7 @@ export default function History() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="mx-auto flex max-w-4xl flex-col gap-4">
       <h1 className="text-xl font-semibold tracking-tight">Past deliberations</h1>
       {error && <p className="text-sm text-alarm">{error}</p>}
       {runs.length === 0 && !error && <p className="text-sm text-muted">Nothing yet.</p>}
