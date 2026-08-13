@@ -133,7 +133,7 @@ class RoleRegistry:
         capable: list[str] = []
         for slug in candidates:
             ok, note = self._capable(slug, rc)
-            if note:
+            if note and note not in notes:
                 notes.append(note)
             if ok:
                 capable.append(slug)

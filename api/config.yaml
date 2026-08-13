@@ -28,16 +28,19 @@ panel_shortlist:
   - mistralai/mistral-large
   - x-ai/grok-2-1212
 
+# Three distinct families, and deliberately disjoint from every referee chain below so a
+# default run needs no substitution and carries no self-preference stamp. Selecting a model
+# that is also a referee is allowed — the invariant fires at request time and says so.
 panel_default:
   - openai/gpt-4o
-  - anthropic/claude-3.7-sonnet
-  - google/gemini-2.5-flash
+  - deepseek/deepseek-chat
+  - qwen/qwen-2.5-72b-instruct
 
 # Each role is a fallback chain: a single pinned slug will rate-limit mid-demo.
 # off_panel: require -> substitute or stamp the run; prefer -> warn only.
 roles:
   comparator:
-    chain: [openai/gpt-4o, google/gemini-2.5-pro]
+    chain: [google/gemini-2.5-pro, openai/gpt-4o]
     prompt_version: comparator_v1
     require_structured: true
     off_panel: prefer
@@ -50,19 +53,23 @@ roles:
     off_panel: require
     temperature: 0.0
   synthesizer:
-    chain: [anthropic/claude-3.7-sonnet, openai/gpt-4o]
+    # A different family from the comparator, so the writer does not inherit the gate's
+    # framing of the dispute along with its verdict.
+    chain: [anthropic/claude-3.7-sonnet, mistralai/mistral-large]
     prompt_version: synthesizer_v1
     require_structured: true
     off_panel: require
     temperature: 0.0
   normalizer:
-    chain: [anthropic/claude-3.5-haiku, openai/gpt-4o-mini]
+    chain: [anthropic/claude-3.5-haiku, google/gemini-2.5-flash]
     prompt_version: normalizer_v1
     require_structured: true
     off_panel: prefer
     temperature: 0.0
   red_team:
-    chain: [anthropic/claude-3.7-sonnet, openai/gpt-4o]
+    # Prefer a family absent from the default panel entirely: the whole value of this seat is
+    # running a different search over the same knowledge.
+    chain: [mistralai/mistral-large, anthropic/claude-3.7-sonnet]
     prompt_version: redteam_v1
     require_structured: true
     off_panel: prefer
