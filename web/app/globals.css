@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+/*
+ * The palette encodes the architecture's central separation, the same way the design figures
+ * do: deterministic code is neutral, a model call is hued. Panel seats are amber, referee
+ * seats teal, external retrieval violet.
+ */
+@theme {
+  --color-ink: #12161c;
+  --color-paper: #f6f7f9;
+  --color-surface: #ffffff;
+  --color-line: #dde2e8;
+  --color-muted: #5b6572;
+
+  --color-panel: #8e5310;
+  --color-panel-bg: #fbeedc;
+  --color-panel-line: #c98a3c;
+
+  --color-referee: #0a6169;
+  --color-referee-bg: #ddf0f1;
+  --color-referee-line: #3e97a0;
+
+  --color-external: #523cb0;
+  --color-external-bg: #eae5fb;
+  --color-external-line: #8b78e0;
+
+  --color-alarm: #9c3d55;
+  --color-alarm-bg: #f9e4e9;
+  --color-alarm-line: #c4788c;
+
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 0.5rem;
+}

@@ -81,8 +81,15 @@ async def get_run(request: Request, run_id: str) -> dict:
 
 
 def _sse(event: TraceEvent) -> str:
+    """Frames are deliberately *unnamed*.
+
+    Setting an `event:` field makes the browser dispatch that name instead of `message`, so
+    `EventSource.onmessage` never fires and a client has to register a listener per event type —
+    meaning any new event type is silently dropped. The type travels inside the payload, which
+    every consumer parses anyway. The comment line keeps `curl` output readable.
+    """
     payload = json.dumps(event.model_dump(mode="json"), ensure_ascii=False)
-    return f"id: {event.seq}\nevent: {event.type.value}\ndata: {payload}\n\n"
+    return f": {event.type.value}\nid: {event.seq}\ndata: {payload}\n\n"
 
 
 @router.get("/runs/{run_id}/stream")

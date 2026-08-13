@@ -61,6 +61,19 @@ def create_app(
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         await app.state.store.ensure_ready()
+        if app.state.capabilities is None and resolved_settings.openrouter_api_key:
+            # Without the catalogue two invariants quietly stop running: referee capability
+            # checks pass by default, and the guard's minimum-context check is a no-op — which
+            # would let a context that fits one panelist and truncates another manufacture a
+            # disagreement. Failure to fetch is survivable, but it must not be silent.
+            from .providers import catalog
+
+            try:
+                app.state.capabilities = await catalog.fetch(
+                    resolved_settings.openrouter_api_key
+                )
+            except Exception as exc:  # noqa: BLE001
+                app.state.catalogue_error = str(exc)
         try:
             yield
         finally:
@@ -101,6 +114,10 @@ def create_app(
             "ok": True,
             "durable_store": getattr(app.state.store, "durable", False),
             "config_fingerprint": resolved_cfg.fingerprint(),
+            # False means the capability and context-window invariants are running on
+            # assumption rather than data for this process.
+            "catalogue_loaded": app.state.capabilities is not None,
+            "catalogue_error": getattr(app.state, "catalogue_error", None),
         }
 
     return app
