@@ -43,4 +43,4 @@ seed:
 
 # Replay all five demo deliberations with no OpenRouter key.
 demo: seed
-	cd api && DELIBRATOR_REPLAY=1 uv run uvicorn app.main:app --port 8000
+	cd api && DELIBERATOR_REPLAY=1 uv run uvicorn app.main:app --port 8000

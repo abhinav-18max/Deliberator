@@ -3,7 +3,7 @@ import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Delibrator",
+  title: "Deliberator",
   description: "Multi-model deliberation: one answer, and an honest record of how it won.",
 };
 
@@ -14,7 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="border-b border-line bg-surface">
           <div className="mx-auto flex max-w-6xl items-baseline justify-between px-6 py-4">
             <Link href="/" className="font-mono text-sm font-semibold tracking-wide">
-              DELIBRATOR
+              DELIBERATOR
             </Link>
             <nav className="flex gap-5 text-sm">
               <Link href="/" className="text-muted hover:text-ink">

@@ -92,9 +92,9 @@ class Config(BaseModel):
 class Settings(BaseModel):
     openrouter_api_key: str = ""
     openrouter_app_url: str = "http://localhost:3000"
-    openrouter_app_title: str = "Delibrator"
+    openrouter_app_title: str = "Deliberator"
     mongodb_uri: str = ""
-    mongodb_db: str = "delibrator"
+    mongodb_db: str = "deliberator"
     replay: bool = False
 
     @property
@@ -130,10 +130,10 @@ def load_settings() -> Settings:
     return Settings(
         openrouter_api_key=os.environ.get("OPENROUTER_API_KEY", ""),
         openrouter_app_url=os.environ.get("OPENROUTER_APP_URL", "http://localhost:3000"),
-        openrouter_app_title=os.environ.get("OPENROUTER_APP_TITLE", "Delibrator"),
+        openrouter_app_title=os.environ.get("OPENROUTER_APP_TITLE", "Deliberator"),
         mongodb_uri=os.environ.get("MONGODB_URI", ""),
-        mongodb_db=os.environ.get("MONGODB_DB", "delibrator"),
-        replay=os.environ.get("DELIBRATOR_REPLAY", "0") not in ("0", "", "false", "False"),
+        mongodb_db=os.environ.get("MONGODB_DB", "deliberator"),
+        replay=os.environ.get("DELIBERATOR_REPLAY", "0") not in ("0", "", "false", "False"),
     )
 
 

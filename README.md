@@ -1,4 +1,4 @@
-# Delibrator
+# Deliberator
 
 Ask several models the same question independently, compare their answers, debate only the
 differences that would change what you do, and return **one** answer labelled with how it won.

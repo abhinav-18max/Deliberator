@@ -4,7 +4,7 @@ This is what `call_key` was for. Three things fall out of it:
 
 *   **The eval harness is free after its first run.** Comparator calibration is measured against
     recorded completions, so a regression check costs nothing and works offline.
-*   **The demo needs no API key.** `DELIBRATOR_REPLAY=1` serves every call from the recorded
+*   **The demo needs no API key.** `DELIBERATOR_REPLAY=1` serves every call from the recorded
     fixtures, so a reviewer who never gets a key still sees the whole product work.
 *   **A prompt edit correctly misses.** The prompt version is part of the key, so changing a
     prompt invalidates its recordings instead of silently replaying the old behaviour.

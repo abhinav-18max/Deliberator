@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { DebateFigure, LadderFigure, Legend, PipelineFigure } from "@/components/figures";
 
 export const metadata: Metadata = {
-  title: "Architecture — Delibrator",
+  title: "Architecture — Deliberator",
   description:
     "How the deliberation works, which ideas it borrows, and how each claim is checked in code.",
 };

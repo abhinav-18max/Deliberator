@@ -89,7 +89,7 @@ def create_app(
             if closer is not None:
                 await closer()
 
-    app = FastAPI(title="Delibrator", version="0.1.0", lifespan=lifespan)
+    app = FastAPI(title="Deliberator", version="0.1.0", lifespan=lifespan)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
