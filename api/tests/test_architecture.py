@@ -44,6 +44,39 @@ def test_the_event_tape_is_append_only():
     assert set(calls) <= allowed, f"non-append operation on the tape: {set(calls) - allowed}"
 
 
+def test_only_the_maintenance_module_may_delete():
+    """Housekeeping has to be possible, but it must stay easy to find.
+
+    `store/maintenance.py` is the one file allowed to remove documents or drop an index. Anything
+    else reaching for a destructive call means the pipeline itself has started editing history,
+    which is the property the append-only tape exists to provide.
+    """
+    destructive = {
+        "delete_one",
+        "delete_many",
+        "drop",
+        "drop_index",
+        "drop_indexes",
+        "find_one_and_delete",
+        "bulk_write",
+    }
+    offenders: list[str] = []
+    for path in sorted(APP.rglob("*.py")):
+        if path.name == "maintenance.py":
+            continue
+        for node in ast.walk(ast.parse(path.read_text())):
+            if (
+                isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Attribute)
+                and node.func.attr in destructive
+            ):
+                offenders.append(f"{path.relative_to(APP)}:{node.lineno} .{node.func.attr}()")
+
+    assert not offenders, "destructive database calls outside store/maintenance.py: " + ", ".join(
+        offenders
+    )
+
+
 def test_the_orchestrator_holds_no_prompts():
     """Judgement lives in models, and the wording of that judgement lives in prompt files. An
     orchestrator that renders a prompt has started making judgement calls.

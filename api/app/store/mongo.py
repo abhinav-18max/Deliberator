@@ -29,7 +29,12 @@ class MongoStore:
         self.catalog = self._db["model_catalog"]
 
     async def ensure_ready(self) -> None:
-        await self.events.create_index([("run_id", 1), ("seq", 1)], name="run_seq")
+        # Unique, so a duplicate tape entry is refused by the database rather than prevented by
+        # the deterministic `_id` alone. Two writers appending the same step is now an error at
+        # the point of the mistake instead of a silently doubled trace.
+        await self.events.create_index(
+            [("run_id", 1), ("seq", 1)], name="run_seq", unique=True
+        )
         await self.events.create_index([("type", 1), ("ts", -1)], name="type_ts")
         await self.runs.create_index([("created_at", -1)], name="created_desc")
 
