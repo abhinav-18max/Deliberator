@@ -86,5 +86,11 @@ roles:
 allow_request_overrides: [synthesizer, verifier]
 
 # (comparator_slug, prompt_version) pairs measured against api/app/evalset/cases.
-# A run whose comparator config is absent here is stamped `gate: unvalidated`.
-verified_configs: []
+# A run whose comparator config is absent here is stamped `gate: unvalidated`, because the
+# calibration belongs to the pair — swap either half and the measurement no longer applies.
+# Re-run `make eval` after any prompt edit; the prompt version is part of the call key, so
+# recordings correctly miss rather than replaying the old behaviour.
+verified_configs:
+  - slug: google/gemini-2.5-pro
+    prompt_version: comparator_v1
+    material_recall: 1.00

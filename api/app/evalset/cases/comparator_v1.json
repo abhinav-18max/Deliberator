@@ -1,0 +1,405 @@
+[
+  {
+    "id": "none-01-identical-conclusion",
+    "label": "none",
+    "why": "Same conclusion, same reasoning. Nothing to deliberate.",
+    "task": "Does `git reset --soft HEAD~1` change files in my working tree?",
+    "answers": [
+      {
+        "model": "a",
+        "answer": "No. `--soft` moves HEAD only. The index and working tree are untouched, so your changes remain staged.",
+        "key_claims": ["--soft moves HEAD only", "index and working tree are untouched"],
+        "assumptions": [],
+        "expected_consensus": "Everyone will say the working tree is untouched."
+      },
+      {
+        "model": "b",
+        "answer": "It does not. A soft reset only repoints HEAD to the parent commit; your files and the staging area stay exactly as they were.",
+        "key_claims": ["soft reset repoints HEAD", "files and staging area unchanged"],
+        "assumptions": [],
+        "expected_consensus": "All models will agree the tree is untouched."
+      }
+    ]
+  },
+  {
+    "id": "none-02-shared-blind-spot",
+    "label": "none",
+    "why": "Both answers are confidently wrong in the same way. The gate detects disagreement, not error, and correctly reports none — this case exists to document the blind spot honestly, not to be caught.",
+    "task": "In Python, is `dict.keys()` a list I can index with [0]?",
+    "answers": [
+      {
+        "model": "a",
+        "answer": "Yes, `dict.keys()` returns a list, so `d.keys()[0]` gives you the first key.",
+        "key_claims": ["keys() returns a list", "d.keys()[0] works"],
+        "assumptions": [],
+        "expected_consensus": "Most models will say it returns a list."
+      },
+      {
+        "model": "b",
+        "answer": "It is a list. Indexing with `d.keys()[0]` is the normal way to grab the first key.",
+        "key_claims": ["keys() is a list", "indexing works directly"],
+        "assumptions": [],
+        "expected_consensus": "Others will agree it is indexable."
+      }
+    ]
+  },
+  {
+    "id": "surface-01-verbosity",
+    "label": "surface",
+    "why": "One answer is four times longer, but everything extra is *explanation* of the same recommendation — no additional step, constraint or risk. Length is not disagreement. (Originally this case gave the long answer extra actionable steps, and the comparator called it material. It was right: an omitted step the user would otherwise ship without is material by the same rule as material-03. The case was fixed rather than the prompt — the labels are ground truth only while they are defensible.)",
+    "task": "Should I store session tokens in localStorage or an httpOnly cookie?",
+    "answers": [
+      {
+        "model": "a",
+        "answer": "Use an httpOnly cookie rather than localStorage, because localStorage is readable by page scripts.",
+        "key_claims": ["httpOnly cookie is the right store", "localStorage is script-readable"],
+        "assumptions": [],
+        "expected_consensus": "Everyone will say httpOnly cookie."
+      },
+      {
+        "model": "b",
+        "answer": "Prefer an httpOnly cookie. The reason is the blast radius of a single cross-site scripting bug: anything in localStorage is reachable by any script that manages to run on your page, so one injected snippet can read the token and replay it from anywhere. An httpOnly cookie is not exposed to JavaScript at all, so the same XSS bug no longer yields a stealable credential. This is why the browser security model draws the line where it does, and why the guidance has been consistent for years.",
+        "key_claims": ["httpOnly cookie is the right store", "localStorage is script-readable", "XSS blast radius is the reason"],
+        "assumptions": [],
+        "expected_consensus": "Most models will recommend httpOnly cookies."
+      }
+    ]
+  },
+  {
+    "id": "surface-02-different-route-same-action",
+    "label": "surface",
+    "why": "Different reasoning, different emphasis, same action for the user.",
+    "task": "Our API returns 500s under load spikes. Add a queue or add autoscaling?",
+    "answers": [
+      {
+        "model": "a",
+        "answer": "Add a queue. Buffering absorbs the spike so the workers drain at a sustainable rate; autoscaling reacts too slowly to help a 30-second burst.",
+        "key_claims": ["add a queue", "autoscaling reacts too slowly for short bursts"],
+        "assumptions": ["spikes are short"],
+        "expected_consensus": "Most will suggest queueing first."
+      },
+      {
+        "model": "b",
+        "answer": "Put work behind a queue first. Autoscaling is worth having, but cold-start latency means it cannot catch a sudden burst, and a queue also protects your database from connection exhaustion.",
+        "key_claims": ["queue first", "autoscaling has cold-start latency", "queue protects the database"],
+        "assumptions": ["bursts are sudden"],
+        "expected_consensus": "Others will also say queue first."
+      }
+    ]
+  },
+  {
+    "id": "surface-03-same-answer-different-framing",
+    "label": "surface",
+    "why": "Same verdict and same work factor. One frames it historically and one frames it as a checklist; the user does exactly the same thing either way.",
+    "task": "Is bcrypt still an acceptable password hash, and at what cost factor?",
+    "answers": [
+      {
+        "model": "a",
+        "answer": "Yes — bcrypt remains acceptable. Use a cost factor of at least 12.",
+        "key_claims": ["bcrypt is acceptable", "cost factor at least 12"],
+        "assumptions": [],
+        "expected_consensus": "Most will say yes at cost 12 or above."
+      },
+      {
+        "model": "b",
+        "answer": "bcrypt has held up well: it is deliberately slow, it salts by default, and nothing has broken it. It is still an acceptable choice today provided you raise the work factor as hardware improves — cost 12 or higher is the current floor.",
+        "key_claims": ["bcrypt is acceptable", "cost 12 or higher is the floor", "it salts by default"],
+        "assumptions": [],
+        "expected_consensus": "Others will also accept bcrypt at cost 12+."
+      }
+    ]
+  },
+  {
+    "id": "material-01-opposite-recommendation",
+    "label": "material",
+    "why": "Directly opposed actions.",
+    "task": "Should a 3-person startup adopt Kubernetes for their single Django app?",
+    "answers": [
+      {
+        "model": "a",
+        "answer": "No. Deploy to a managed platform. Kubernetes will consume an engineer's entire attention for capability you do not need at this size.",
+        "key_claims": ["do not adopt Kubernetes", "use a managed platform"],
+        "assumptions": ["one app, low traffic"],
+        "expected_consensus": "Most models will advise against Kubernetes."
+      },
+      {
+        "model": "b",
+        "answer": "Yes. Adopt Kubernetes now while the system is simple; migrating later is far more painful than learning it early, and managed control planes remove most of the operational burden.",
+        "key_claims": ["adopt Kubernetes now", "later migration is more painful"],
+        "assumptions": ["the team expects rapid growth"],
+        "expected_consensus": "Most models will probably say it is overkill."
+      }
+    ]
+  },
+  {
+    "id": "material-02-similar-words-different-conclusion",
+    "label": "material",
+    "why": "The sneaky one: near-identical vocabulary and structure, opposite conclusions about whether the index is used.",
+    "task": "Will Postgres use my index on (tenant_id, created_at) for a query filtering only on created_at?",
+    "answers": [
+      {
+        "model": "a",
+        "answer": "Yes, Postgres can use a composite index on (tenant_id, created_at) for a query filtering only on created_at.",
+        "key_claims": ["the composite index will be used for created_at alone"],
+        "assumptions": [],
+        "expected_consensus": "Most will say the index is usable."
+      },
+      {
+        "model": "b",
+        "answer": "No, Postgres will not use a composite index on (tenant_id, created_at) for a query filtering only on created_at, because the leading column is absent.",
+        "key_claims": ["the composite index will not be used without the leading column"],
+        "assumptions": [],
+        "expected_consensus": "Most will say the index is skipped."
+      }
+    ]
+  },
+  {
+    "id": "material-03-omitted-constraint",
+    "label": "material",
+    "why": "Nothing literally contradicts. One answer simply omits that the operation locks the table, and a user acting on it in production would cause an outage. Omission is material.",
+    "task": "How do I add a NOT NULL column with a default to a 50-million-row Postgres 10 table?",
+    "answers": [
+      {
+        "model": "a",
+        "answer": "Run `ALTER TABLE orders ADD COLUMN status text NOT NULL DEFAULT 'pending';`. That is all you need.",
+        "key_claims": ["a single ALTER TABLE is sufficient"],
+        "assumptions": [],
+        "expected_consensus": "Most will give the same ALTER TABLE."
+      },
+      {
+        "model": "b",
+        "answer": "On Postgres 10 that statement rewrites the whole table under an ACCESS EXCLUSIVE lock, which will take your table offline for minutes. Add the column as nullable, backfill in batches, then add the constraint with a validated check.",
+        "key_claims": ["the naive ALTER rewrites the table under an exclusive lock", "add nullable, backfill in batches, then constrain"],
+        "assumptions": ["the table is in production and reads matter"],
+        "expected_consensus": "Some models will give the naive single statement."
+      }
+    ]
+  },
+  {
+    "id": "material-04-checkable-fact",
+    "label": "material",
+    "why": "A disagreement about a checkable property of a released version. An external arbiter exists, so this should be typed factual.",
+    "task": "Can I use `SELECT ... FOR UPDATE SKIP LOCKED` in MySQL 5.7?",
+    "answers": [
+      {
+        "model": "a",
+        "answer": "Yes, SKIP LOCKED works in MySQL 5.7; it is the standard way to build a queue table there.",
+        "key_claims": ["SKIP LOCKED is available in MySQL 5.7"],
+        "assumptions": [],
+        "expected_consensus": "Most will say it is available."
+      },
+      {
+        "model": "b",
+        "answer": "No. SKIP LOCKED arrived in MySQL 8.0. On 5.7 you need an explicit status column with an UPDATE ... LIMIT 1 claim pattern.",
+        "key_claims": ["SKIP LOCKED requires MySQL 8.0", "5.7 needs a status-column claim pattern"],
+        "assumptions": [],
+        "expected_consensus": "Some models will wrongly say 5.7 supports it."
+      }
+    ]
+  },
+  {
+    "id": "material-05-interpretation-split",
+    "label": "material",
+    "why": "The declared assumptions diverge: one read the budget as monthly, the other as annual. Both answers are internally perfect and mutually useless. This should be typed interpretation.",
+    "task": "We have a $5,000 budget for observability tooling. What should we buy for a 20-service platform?",
+    "answers": [
+      {
+        "model": "a",
+        "answer": "With $5,000 a month you can run a commercial APM across all 20 services with generous retention.",
+        "key_claims": ["a commercial APM fits the budget", "generous retention is affordable"],
+        "assumptions": ["the budget is $5,000 per month"],
+        "expected_consensus": "Most will assume a monthly budget."
+      },
+      {
+        "model": "b",
+        "answer": "With $5,000 for the year, commercial APM pricing is out of reach at 20 services. Self-host Prometheus and Grafana and spend the budget on storage and one managed alerting service.",
+        "key_claims": ["commercial APM is unaffordable annually", "self-host Prometheus and Grafana"],
+        "assumptions": ["the budget is $5,000 per year"],
+        "expected_consensus": "Others may assume this is an annual figure."
+      }
+    ]
+  },
+  {
+    "id": "material-06-threshold-changes-action",
+    "label": "material",
+    "why": "Same shape of advice, but the thresholds differ by two orders of magnitude, so the same user acts differently.",
+    "task": "At what point should we move from SQLite to Postgres for our web app?",
+    "answers": [
+      {
+        "model": "a",
+        "answer": "Move once you have more than about 100 concurrent writers or need multiple app servers. Below that SQLite in WAL mode is genuinely fine.",
+        "key_claims": ["threshold is ~100 concurrent writers", "SQLite fine below that"],
+        "assumptions": ["single-server deployment"],
+        "expected_consensus": "Most will set a fairly high threshold."
+      },
+      {
+        "model": "b",
+        "answer": "Move as soon as you have more than one concurrent writer. SQLite serialises writes, so any real write concurrency will surface lock timeouts.",
+        "key_claims": ["threshold is more than one concurrent writer", "SQLite serialises writes"],
+        "assumptions": [],
+        "expected_consensus": "Most will recommend moving early."
+      }
+    ]
+  },
+  {
+    "id": "material-07-one-warns-against-the-other",
+    "label": "material",
+    "why": "One answer's recommendation is the thing the other explicitly identifies as a security hole.",
+    "task": "How should our Node service verify the JWTs issued by our auth provider?",
+    "answers": [
+      {
+        "model": "a",
+        "answer": "Decode the token with `jwt.decode()` and read the claims. It is fast and avoids a round trip for the signing key.",
+        "key_claims": ["use jwt.decode to read claims", "avoids fetching the signing key"],
+        "assumptions": [],
+        "expected_consensus": "Most will describe decoding the token."
+      },
+      {
+        "model": "b",
+        "answer": "Use `jwt.verify()` against the provider's JWKS, pinning the expected algorithm, issuer and audience. Never use `decode()` for authorisation — it does not check the signature, so anyone can forge claims.",
+        "key_claims": ["verify against JWKS with pinned alg, iss, aud", "decode does not check the signature"],
+        "assumptions": [],
+        "expected_consensus": "Most will insist on verify, not decode."
+      }
+    ]
+  },
+  {
+    "id": "material-08-three-way-split",
+    "label": "material",
+    "why": "Three genuinely different actions, so clustering should find three stances rather than collapsing to two.",
+    "task": "Our test suite takes 40 minutes in CI. What should we do first?",
+    "answers": [
+      {
+        "model": "a",
+        "answer": "Parallelise across more CI runners first. It is the cheapest change and needs no test edits.",
+        "key_claims": ["parallelise across runners first"],
+        "assumptions": ["CI minutes are affordable"],
+        "expected_consensus": "Many will suggest parallelising."
+      },
+      {
+        "model": "b",
+        "answer": "Profile first and fix the slowest 5% of tests. Parallelising a suite full of sleeps and real HTTP calls just buys the same waste in parallel.",
+        "key_claims": ["profile and fix the slowest tests first"],
+        "assumptions": [],
+        "expected_consensus": "Some will say profile first."
+      },
+      {
+        "model": "c",
+        "answer": "Split the suite by risk: run unit tests on every push and the full integration suite only on merge to main. That gets feedback under five minutes today without touching a single test.",
+        "key_claims": ["split by risk, gate integration tests on merge"],
+        "assumptions": ["a trunk-based workflow"],
+        "expected_consensus": "Most will probably suggest parallelising instead."
+      }
+    ]
+  },
+  {
+    "id": "material-09-cost-difference",
+    "label": "material",
+    "why": "Both recommend a managed service, but the cost estimates differ by an order of magnitude, which changes whether the user can proceed at all.",
+    "task": "Roughly what will managed Postgres cost us for a 200GB database with moderate traffic?",
+    "answers": [
+      {
+        "model": "a",
+        "answer": "Expect roughly $200-$400 a month on a mainstream cloud provider for that size with a single replica.",
+        "key_claims": ["$200-$400 per month with one replica"],
+        "assumptions": ["one read replica, standard storage"],
+        "expected_consensus": "Most will give a figure in the low hundreds."
+      },
+      {
+        "model": "b",
+        "answer": "Budget around $3,000 a month once you include high availability, backups with long retention, and egress.",
+        "key_claims": ["around $3,000 per month including HA and backups"],
+        "assumptions": ["multi-AZ high availability, long backup retention"],
+        "expected_consensus": "Others will quote a few hundred dollars."
+      }
+    ]
+  },
+  {
+    "id": "material-10-scope-of-migration",
+    "label": "material",
+    "why": "Same direction, incompatible scope: one recommends a full rewrite, the other an incremental strangler. The work plan differs entirely.",
+    "task": "We need to move our monolith off a deprecated framework. What is the plan?",
+    "answers": [
+      {
+        "model": "a",
+        "answer": "Rewrite it. The framework's idioms are baked into every layer, so an incremental port leaves you maintaining two frameworks for a year.",
+        "key_claims": ["do a full rewrite", "incremental port means maintaining two frameworks"],
+        "assumptions": ["the team can freeze features during the rewrite"],
+        "expected_consensus": "Most will recommend incremental migration instead."
+      },
+      {
+        "model": "b",
+        "answer": "Strangle it incrementally. Put a router in front, move one route group at a time, and keep shipping features throughout. Rewrites of this size routinely overrun and stall.",
+        "key_claims": ["strangle incrementally behind a router", "big rewrites overrun"],
+        "assumptions": ["features must keep shipping"],
+        "expected_consensus": "Most will recommend the incremental route."
+      }
+    ]
+  },
+  {
+    "id": "surface-04-ordering-only",
+    "label": "surface",
+    "why": "Identical set of steps in a different order, with no dependency between them. The user does the same work.",
+    "task": "What should we do to harden a fresh Ubuntu server?",
+    "answers": [
+      {
+        "model": "a",
+        "answer": "Disable password SSH, enable a firewall allowing only 22/80/443, set up unattended-upgrades, and create a non-root sudo user.",
+        "key_claims": ["disable password SSH", "firewall to 22/80/443", "unattended-upgrades", "non-root sudo user"],
+        "assumptions": ["a public web server"],
+        "expected_consensus": "Most will list the same basics."
+      },
+      {
+        "model": "b",
+        "answer": "Create a non-root sudo user, turn on automatic security updates, restrict the firewall to SSH plus HTTP and HTTPS, and switch SSH to key-only authentication.",
+        "key_claims": ["non-root sudo user", "automatic security updates", "firewall to SSH/HTTP/HTTPS", "key-only SSH"],
+        "assumptions": ["a public web server"],
+        "expected_consensus": "Others will list the same items."
+      }
+    ]
+  },
+  {
+    "id": "material-11-missing-risk",
+    "label": "material",
+    "why": "One answer recommends an approach whose data-loss risk the other names. Acting on the first without knowing the risk is a different decision.",
+    "task": "Can we use `kubectl delete pod` to restart our stateful workload?",
+    "answers": [
+      {
+        "model": "a",
+        "answer": "Yes, deleting the pod is the normal way to restart it. The controller recreates it immediately.",
+        "key_claims": ["deleting the pod restarts it", "the controller recreates it"],
+        "assumptions": [],
+        "expected_consensus": "Most will say deleting the pod is fine."
+      },
+      {
+        "model": "b",
+        "answer": "For a StatefulSet with local ephemeral storage, deleting the pod discards anything not on a PersistentVolume, and for a single-replica set you take a write outage until the new pod passes readiness. Use a rollout restart and confirm the volume claim first.",
+        "key_claims": ["local ephemeral data is lost", "single replica means a write outage", "use rollout restart and check the PVC"],
+        "assumptions": ["a StatefulSet with one replica"],
+        "expected_consensus": "Some models will say deletion is harmless."
+      }
+    ]
+  },
+  {
+    "id": "none-03-same-refusal-of-premise",
+    "label": "none",
+    "why": "Both reject the premise in the same way and recommend the same alternative.",
+    "task": "What is the fastest way to store credit card numbers in our own database?",
+    "answers": [
+      {
+        "model": "a",
+        "answer": "Do not store them. Use a payment provider's tokenisation so the card number never touches your systems; storing PANs puts you in PCI DSS scope you do not want.",
+        "key_claims": ["do not store card numbers", "use provider tokenisation", "storing PANs brings PCI scope"],
+        "assumptions": [],
+        "expected_consensus": "Everyone will say use tokenisation."
+      },
+      {
+        "model": "b",
+        "answer": "You should not. Hand the card to your payment processor and keep only their token. Holding card numbers yourself pulls your whole environment into PCI DSS audit scope.",
+        "key_claims": ["do not hold card numbers", "keep only the processor token", "PCI scope expands"],
+        "assumptions": [],
+        "expected_consensus": "All models will recommend tokenisation."
+      }
+    ]
+  }
+]

@@ -21,15 +21,21 @@ from .store.broadcast import Broadcast
 from .store.memory import MemoryStore
 
 
-def build_provider(settings: Settings) -> LLMPort:
+def build_provider(settings: Settings, store: StorePort) -> LLMPort:
     from .providers.openrouter import OpenRouterProvider
+    from .providers.replay import CachingProvider
 
-    if not settings.openrouter_api_key:
+    live = OpenRouterProvider(settings) if settings.openrouter_api_key else None
+    if settings.replay:
+        # Replay serves recorded fixtures only. A missing recording is an error rather than a
+        # silent live call, so a demo cannot quietly start spending money.
+        return CachingProvider(store, inner=None)
+    if live is None:
         raise ConfigError(
             "OPENROUTER_API_KEY is not set. Copy api/.env.example to api/.env and add a key, "
             "or run `make demo` to replay the recorded traces without one."
         )
-    return OpenRouterProvider(settings)
+    return CachingProvider(store, inner=live)
 
 
 def build_store(settings: Settings) -> StorePort:
@@ -79,7 +85,7 @@ def create_app(
 
     def build_orchestrator() -> Orchestrator:
         return Orchestrator(
-            provider or build_provider(resolved_settings),
+            provider or build_provider(resolved_settings, app.state.store),
             app.state.config,
             capabilities=app.state.capabilities,
         )
