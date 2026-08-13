@@ -2,6 +2,7 @@
 
 from typing import Any
 
+from app import label_validator
 from app.contracts import (
     Action,
     DebateTurn,
@@ -260,8 +261,20 @@ def verification_out(
     return doc
 
 
-async def collect(orchestrator, run_id: str, request) -> list[TraceEvent]:
-    return [event async for event in orchestrator.run(run_id, request)]
+async def collect(orchestrator, run_id: str, request, *, validate_label: bool = True):
+    """Run the pipeline and, by default, assert the published label is supported by the tape.
+
+    Every pipeline test enforces the output contract this way rather than each one remembering
+    to check it, so a rung that starts advertising the wrong label fails whichever scenario
+    reaches it first.
+    """
+    events = [event async for event in orchestrator.run(run_id, request)]
+    if validate_label:
+        violations = label_validator.validate(events)
+        assert not violations, "label not supported by the tape:\n" + "\n".join(
+            f"  {v}" for v in violations
+        )
+    return events
 
 
 def payload_of(events: list[TraceEvent], type_: EventType) -> dict[str, Any]:

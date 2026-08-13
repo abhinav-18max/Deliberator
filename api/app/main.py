@@ -61,7 +61,15 @@ def create_app(
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         await app.state.store.ensure_ready()
-        if app.state.capabilities is None and resolved_settings.openrouter_api_key:
+        # Only consult the catalogue for a transport we built. An injected provider means the
+        # caller owns its environment — a test with scripted slugs must not reach the network,
+        # and its fake models must not be measured against a real catalogue.
+        needs_catalogue = (
+            provider is None
+            and app.state.capabilities is None
+            and bool(resolved_settings.openrouter_api_key)
+        )
+        if needs_catalogue:
             # Without the catalogue two invariants quietly stop running: referee capability
             # checks pass by default, and the guard's minimum-context check is a no-op — which
             # would let a context that fits one panelist and truncates another manufacture a
