@@ -1,0 +1,75 @@
+# Operator configuration. Callers may override only the roles listed in
+# `allow_request_overrides`; the comparator is never caller-overridable because its
+# structured output *is* the control flow.
+#
+# Slugs below are PROVISIONAL. `make doctor` reconciles them against OpenRouter's live
+# catalogue and prints the closest available alternative for anything that has rotted —
+# a pinned slug that vanished should fail at boot with a suggestion, never mid-run.
+
+caps:
+  max_panel: 5
+  min_quorum: 2
+  max_rounds: 2               # debate hard stop; past this, capitulation outpaces truth
+  max_verified_disputes: 3    # grounded calls are billed per request; drops are logged
+  search_max_results: 5
+  per_call_timeout_s: 90
+  panel_call_timeout_s: 60
+
+# The panel picker is a curated shortlist spanning distinct families, so the
+# family-diversity and min-context rules are enforceable and no junk model can break
+# fan-out mid-demo.
+panel_shortlist:
+  - openai/gpt-4o
+  - anthropic/claude-3.7-sonnet
+  - google/gemini-2.5-flash
+  - deepseek/deepseek-chat
+  - qwen/qwen-2.5-72b-instruct
+  - meta-llama/llama-3.3-70b-instruct
+  - mistralai/mistral-large
+  - x-ai/grok-2-1212
+
+panel_default:
+  - openai/gpt-4o
+  - anthropic/claude-3.7-sonnet
+  - google/gemini-2.5-flash
+
+# Each role is a fallback chain: a single pinned slug will rate-limit mid-demo.
+# off_panel: require -> substitute or stamp the run; prefer -> warn only.
+roles:
+  comparator:
+    chain: [openai/gpt-4o, google/gemini-2.5-pro]
+    prompt_version: comparator_v1
+    require_structured: true
+    off_panel: prefer
+    temperature: 0.0
+  verifier:
+    chain: [google/gemini-2.5-flash, google/gemini-2.5-pro]
+    prompt_version: verifier_v1
+    require_structured: true
+    require_web: true
+    off_panel: require
+    temperature: 0.0
+  synthesizer:
+    chain: [anthropic/claude-3.7-sonnet, openai/gpt-4o]
+    prompt_version: synthesizer_v1
+    require_structured: true
+    off_panel: require
+    temperature: 0.0
+  normalizer:
+    chain: [anthropic/claude-3.5-haiku, openai/gpt-4o-mini]
+    prompt_version: normalizer_v1
+    require_structured: true
+    off_panel: prefer
+    temperature: 0.0
+  red_team:
+    chain: [anthropic/claude-3.7-sonnet, openai/gpt-4o]
+    prompt_version: redteam_v1
+    require_structured: true
+    off_panel: prefer
+    temperature: 0.0
+
+allow_request_overrides: [synthesizer, verifier]
+
+# (comparator_slug, prompt_version) pairs measured against api/app/evalset/cases.
+# A run whose comparator config is absent here is stamped `gate: unvalidated`.
+verified_configs: []
