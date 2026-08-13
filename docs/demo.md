@@ -1,6 +1,6 @@
 # Demonstration
 
-Four real deliberations, run against live models through the HTTP API. The full tapes are in
+Five real deliberations, run against live models through the HTTP API. The full tapes are in
 `docs/demo/*.json` — every panel answer, the gate's justification, each debate turn with its
 steelman, the citations, and the rung taken.
 
@@ -12,118 +12,135 @@ make web                                   # then open http://localhost:3000/run
 Seeding validates each tape on the way in: a fixture whose label its own events do not support is
 rejected rather than shown, because the product's central claim is that labels are checkable.
 
-Panel for all four: `openai/gpt-5.2`, `deepseek/deepseek-v3.2`, `qwen/qwen3-max` — three distinct
+Panel for all five: `openai/gpt-5.2`, `deepseek/deepseek-v3.2`, `qwen/qwen3-max` — three distinct
 families, all off-panel from every referee seat. Referees: comparator `google/gemini-2.5-pro`,
-verifier `anthropic/claude-haiku-4.5` (gateway retrieval), synthesizer `anthropic/claude-sonnet-5`.
+verifier `anthropic/claude-haiku-4.5` (gateway retrieval), synthesizer `anthropic/claude-sonnet-5`,
+red team `x-ai/grok-4.6`.
 
-| # | Task | Result | Calls | Cost | Wall clock | What it demonstrates |
+| # | Task | Mode | Result | Calls | Cost | What it demonstrates |
 |---|---|---|---|---|---|---|
-| 1 | `git reset --hard HEAD~1` semantics | **verified / high** (rung 2) | 9 | $0.0689 | 65s | Evidence beating a head-count |
-| 2 | Monorepo or separate repos, 6 engineers | **unanimous / high** (rung 0) | 5 | $0.0270 | 72s | The gate's payoff — 5 calls, not 9 |
-| 3 | 40-minute CI suite, what first | **majority (2/3) / medium** (rung 3) | 9 | $0.0420 | 78s | A debate that honestly failed |
-| 4 | $5,000 observability budget | **majority (2/3) / high** (rung 3) | 6 | $0.0500 | 218s | Interpretation branched, not debated |
+| 1 | `git reset --hard HEAD~1` semantics | fast | **verified / high** (rung 2) | 7 | $0.0785 | Evidence beating a head-count |
+| 2 | Monorepo or separate repos, 6 engineers | fast | **unanimous / high** (rung 0) | 6 | $0.0591 | The gate's payoff |
+| 3 | 40-minute CI suite, what first | fast | **majority (2/3) / medium** (rung 3) | 9 | $0.0629 | A debate that honestly failed |
+| 4 | $5,000 observability budget | fast | **tie-break / low** (rung 4) | 9 | $0.1118 | Ambiguity branched, then an even split |
+| 5 | Same as #2 | **rigorous** | **unanimous / medium** (rung 0) | 8 | $0.1011 | An attack landing on a consensus |
 
-Run 4's 218 seconds is worth noting rather than hiding: the comparator spent most of it on three
-long answers. Latency is the honest cost of the pipeline, which is why the interface streams stage
-transitions instead of showing a spinner.
+> **On the cost column.** These are the real reported figures with one honest asterisk: some
+> providers return no cost at all (Gemini through OpenRouter reports zero), so those calls are
+> estimated from catalogue pricing × tokens and marked `cost_estimated` in the trace. Before that
+> fix the comparator appeared free, which understated a full run by roughly half — it is in fact
+> the most expensive seat, reading every answer at ~3,500 prompt tokens per call.
 
 ---
 
 ## 1. Evidence beats the majority — `verified`
 
-`docs/demo/01KZX23XVNPYN7S1BG6J7G6FX7.json`
+`docs/demo/01KZX5ACR26PF4BDZTZFHWJFC7.json`
 
-Two models said a hard reset loses the commit and all uncommitted work permanently. One said the
-commit is reflog-recoverable and untracked files survive. The gate returned **material** and
-extracted two `factual` disputes, each with a search query:
+Two models said a hard reset destroys everything uncommitted, including untracked files. One said
+untracked files survive. The gate returned **material**, clustered 1-against-2, and typed the
+disagreement `factual` with a search query attached.
 
-- *Is the commit removed by `git reset --hard` permanently lost, or recoverable?*
-- *Does `git reset --hard` affect untracked files?*
+Verification ran two framings, came back `supports` with 10 citations — and backed the
+**single-model minority**. The answer states that untracked files are untouched, which is what
+git's own documentation says and what two of three models got wrong.
 
-Both were checked with two search framings each. Both came back `supports` with 10 citations, and
-the evidence favoured the **single-model minority**. The answer now states the commit is typically
-reflog-recoverable and untracked files are untouched — the opposite of what two of three models
-said.
+The label is `verified` rather than `majority`, so a reader knows the answer won on sources rather
+than on a show of hands. Dissent was classified **oblivious**: the two models that got it wrong
+also expected everyone to agree with them.
 
-This is the case the whole product exists for: a 2–1 majority was overturned by cited sources, and
-the label says `verified` rather than `majority` so the user knows *why* to trust it.
-
-> **A bug this exposed.** The first time this ran, one axis verified for the minority while the
-> other came back `conflicting`, and the run then took rung 3 and crowned the majority stance —
-> publishing "a permanent, total loss" while the pipeline's own verification said otherwise. The
-> label validator caught it during export. Evidence is now **sticky**: a position that lost an axis
-> to cited sources cannot win the run on a head-count. See DESIGN.md §7.
+> **A bug this case exposed.** An earlier run of the same question verified one axis for the
+> minority while a second came back `conflicting`, and the head-count then crowned the majority —
+> publishing "a permanent, total loss" while the pipeline's own sources said otherwise. The label
+> validator caught it during export. Evidence is now **sticky**: a position that lost an axis to
+> cited sources cannot win the run on a vote. See DESIGN.md §7.
 
 ## 2. The gate's payoff — `unanimous`
 
-`docs/demo/01KZWY7GRQN32BKBJVJYEHVX2Z.json`
+`docs/demo/01KZX5C4WT0EGQTJ654NWKQ5CZ.json`
 
-All three models recommended starting with a monorepo. The comparator clustered them into one
-stance and returned `none`, justifying it explicitly: *"The strongest candidate for a disagreement
-is the level of implementation detail provided"* — which does not change what the user does.
+All three models recommended starting with a monorepo, for the same reasons. The comparator
+returned `none` and justified it explicitly: the only candidate difference was implementation
+detail, which does not change what the user does.
 
-The resolver never ran. **5 calls instead of 9**, and the trace shows the resolve stage as
-*skipped — no material dispute*. The caveats still do real work: the answer names the assumptions
-it rests on, states plainly that no dissent survived, and flags that the recommendation is
-time-bound.
+The resolver never ran — the trace shows that stage as *skipped — no material dispute*. The caveats
+still do work: they name the assumptions the recommendation rests on, state that no dissent
+survived, and flag that the advice is stage-bound.
 
 ## 3. A debate that honestly failed — `majority`
 
-`docs/demo/01KZWXEV775DA3D5DMJ334PCY8.json`
+`docs/demo/01KZX5C7Y3AKP2RSE4Z42ES27F.json`
 
-Two models said profile the test suite first; one said parallelise across CI workers first. Typed
-`approach` — no external arbiter exists — so it went to debate. Both rounds ran:
+Two models said profile the suite first; one said parallelise across CI workers first. Typed
+`approach` — no external arbiter exists — so it went to debate, and both rounds ran:
 
-| Round | s1 (profile first) | s2 (parallelise first) |
+| Round | s1 (parallelise) | s2 (profile first) |
 |---|---|---|
 | 1 | DEFEND | DEFEND |
 | 2 | **REVISE** | DEFEND |
 
-In round 2 gpt-5.2 revised: *"Given the explicit constraint that the team is currently blocked by a
-40-minute feedback loop, the immediacy and typically low implementation overhead of CI
-parallelisation outweighs doing deeper profiling as the very first step."* Neither side conceded,
-so the dispute closed **unresolved** — *"an honest standoff, not a failure"* — and the ladder fell
-to rung 3.
+Neither conceded, so the dispute closed **unresolved** — *"an honest standoff, not a failure"* —
+and the ladder fell to rung 3. The dissent was **informed**: its blind peer prediction had named
+the eventual majority position and it disagreed anyway. That is what pulls confidence from high to
+medium and puts the surviving position in the caveats as a live alternative.
 
-The dissent was classified **informed**: qwen's blind peer prediction had correctly named the
-profiling-first answer as the likely consensus, and it disagreed anyway. That is what pulls
-confidence from high to **medium**, and the surviving position is written into the caveats as a
-live alternative rather than dropped.
+## 4. Ambiguity branched, then a genuine tie — `tie-break`
 
-## 4. Ambiguity branched, not battled — `majority` with a conditional
+`docs/demo/01KZX5E0SDZKBR3GRWAY9TZY1N.json`
 
-`docs/demo/01KZWY9Q07QPWCVX64NQ2CB5JX.json`
+The richest tape in the pack: **three stances, one per model, and two disputes of different types.**
 
-Two models read "$5,000 budget" as annual and recommended open-source tooling. One read it as
-monthly and recommended a premium managed suite. The comparator caught it from the declared
-assumptions and typed it `interpretation`:
+- `d1` **interpretation** — *is the $5,000 annual or monthly?* One model read it as monthly. Two
+  valid readings cannot defeat each other, so this closed as `branch` with **no debate**, and the
+  answer carries the alternative as a conditional line.
+- `d2` **approach** — given an annual budget, buy cheap SaaS or self-host? Debated for two rounds
+  between the two stances that held a position; one revised, neither conceded, closed unresolved.
 
-> *"The models fundamentally disagree on whether the $5,000 budget is annual or monthly. This leads
-> to a 12x difference in recommended spending and completely different purchasing strategies."*
+That left three stances of one model each — a genuine three-way tie with no majority to count. The
+ladder fell to rung 4 and broke the tie on the **first published criterion: quality of engagement
+in the debate transcript**, with `tie_break_reason` in the response. Confidence is `low`, which is
+the honest reading of an answer chosen because one side argued more carefully than another.
 
-**No debate was run** — two valid readings of an ambiguous task cannot defeat each other, so the
-dispute closed as `branch`. The answer commits to the majority reading and carries the alternative
-as a conditional: *"If you confirm the $5,000 is monthly rather than annual, the entire
-recommendation changes."*
+## 5. An attack that landed — `rigorous`
 
-The deliberation found a hidden decision variable in the user's own question, which is more useful
-than either answer alone.
+`docs/demo/01KZX56JVSDXR7902KDV0P1FEM.json`
+
+The same monorepo question as #2, in rigorous mode. Two things happen that `fast` skips:
+
+**The gate ran twice**, the second time with the answers in reversed order. Both passes returned
+`none`, so `unstable: false` — the position-bias check actually ran and found nothing, rather than
+being assumed away. (The trace shows three comparator calls, not two: the first pass failed to
+parse and was repaired once, which the tape now marks `repair_attempt`.)
+
+**Then the consensus was attacked.** `x-ai/grok-4.6` — a family absent from the panel — was asked
+for the strongest reason the agreement is wrong, and it found one:
+
+> The consensus treats "start monorepo, split later" as cheaply reversible and as the right default
+> even when stacks differ. For a typical B2B SaaS (TS/React UI + Python/Go/Rails API + infra), there
+> is little real shared code…
+
+It judged its own objection as landing, so confidence dropped from **high to medium** and the attack
+became the first caveat on an answer that would otherwise have shipped unqualified. Three extra
+calls bought one notch of honesty about the case this system is weakest at: the one where nothing on
+the panel disagreed.
+
+Nothing changed about the *recommendation* — a landed attack does not open a debate, because a
+non-panelist advocate would get a vote the user never granted.
 
 ---
 
 ## Coverage, honestly
 
-Observed live in these four runs: rungs **0**, **2**, **3**; verification `supports` and
-`conflicting`; interpretation branching; a two-round debate with a REVISE; informed dissent;
-sticky evidence.
+Observed live across these five runs: rungs **0, 2, 3, 4**; verification `supports`; interpretation
+branching; a two-round debate with a REVISE and no concession; informed and oblivious dissent; a
+three-way stance split; sticky evidence; both rigorous-mode mechanisms, with the red team landing.
 
-Not observed live, and covered only by the offline suite: rung **1** (`debate-resolved` — needs a
-model to actually concede and name the claim it withdraws), rung **4** (`tie-break`), rung **5**
-(`floor`), and rigorous mode's red team. Those paths are exercised by `tests/test_pipeline.py`
-against a scripted provider, where a concession or an even split can be forced; live models
-concede rarely enough that catching one is a matter of luck rather than a demonstration.
+Still not observed live, covered only by the offline suite: rung **1** (`debate-resolved` — needs a
+model to concede *and* name the claim it withdraws) and rung **5** (`floor`). Live models concede
+rarely enough that catching one is luck rather than a demonstration, and the floor requires every
+tie-break criterion to come out level.
 
-To be precise about what CI pins: the suite reproduces each *rung* on a scripted panel, not these
-specific tasks. So a change that would make a rung publish the wrong label or confidence fails
-before it reaches a live run — but nothing in CI guarantees that this particular question still
-lands on rung 2 next month, because that depends on what the models say.
+What CI pins is each *rung*, on a scripted panel — so a change that makes a rung publish the wrong
+label or confidence fails before it reaches a live run. Nothing in CI guarantees this particular
+question still lands on rung 2 next month; that depends on what the models say. These five tapes
+are a record of what happened, not a promise about what will.

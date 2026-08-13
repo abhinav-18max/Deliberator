@@ -346,6 +346,101 @@ export default function Architecture() {
 
       <section className="flex flex-col gap-4">
         <div>
+          <p className="label">Modes</p>
+          <h2 className="mt-1 text-lg font-semibold tracking-tight">
+            One flag, trading cost for scrutiny
+          </h2>
+          <p className="mt-2 max-w-3xl text-sm text-muted">
+            Rigorous mode exists for one reason: the blind spot in the closing paragraph. Both of
+            its additions are aimed at agreement rather than disagreement, because agreement is
+            where this design is weakest and cannot notice.
+          </p>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="card p-4">
+            <div className="flex items-baseline gap-2">
+              <span className="rounded border border-line px-2 py-0.5 font-mono text-[0.68rem]">
+                fast
+              </span>
+              <span className="text-sm font-semibold">the lean path</span>
+            </div>
+            <p className="mt-2 text-[0.85rem] text-muted">
+              One gate pass. Debate only when a dispute is typed as a judgement call, verification
+              only when something is checkable. A unanimous panel costs five calls.
+            </p>
+          </div>
+          <div className="card border-l-2 border-l-referee-line p-4">
+            <div className="flex items-baseline gap-2">
+              <span className="rounded border border-referee-line bg-referee-bg px-2 py-0.5 font-mono text-[0.68rem] text-referee">
+                rigorous
+              </span>
+              <span className="text-sm font-semibold">two extra ways to be wrong</span>
+            </div>
+            <ul className="mt-2 flex flex-col gap-2 text-[0.85rem] text-muted">
+              <li>
+                <strong className="text-ink">The gate runs twice</strong>, the second time with the
+                answers in reversed order. If the verdict flips, the run is marked{" "}
+                <code>unstable</code> and treated as material — uncertainty about whether there is
+                a disagreement is itself a disagreement. This is the position-bias mitigation
+                actually being measured rather than assumed.
+              </li>
+              <li>
+                <strong className="text-ink">A unanimous panel gets attacked.</strong> A model from
+                a family absent from the panel is asked for the strongest reason the consensus is
+                wrong, and must judge honestly whether its own objection would change what the user
+                does. A landed attack demotes confidence one notch and is quoted in the caveats; it
+                does not open a debate, because a non-panelist advocate would get a vote the user
+                never granted.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="card p-4">
+          <p className="label">Observed — the same question, both modes</p>
+          <div className="mt-2 overflow-x-auto">
+            <table className="w-full min-w-[34rem] text-sm">
+              <thead>
+                <tr className="border-b border-line">
+                  <th className="label px-2 py-1.5 text-left font-medium">Mode</th>
+                  <th className="label px-2 py-1.5 text-left font-medium">Result</th>
+                  <th className="label px-2 py-1.5 text-right font-medium">Calls</th>
+                  <th className="label px-2 py-1.5 text-right font-medium">Cost</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-line">
+                  <td className="px-2 py-1.5 font-mono text-[0.75rem]">fast</td>
+                  <td className="px-2 py-1.5">unanimous / high</td>
+                  <td className="px-2 py-1.5 text-right font-mono text-[0.75rem]">5</td>
+                  <td className="px-2 py-1.5 text-right font-mono text-[0.75rem]">$0.027</td>
+                </tr>
+                <tr>
+                  <td className="px-2 py-1.5 font-mono text-[0.75rem]">rigorous</td>
+                  <td className="px-2 py-1.5">
+                    unanimous / <span className="text-panel">medium</span> — attack landed
+                  </td>
+                  <td className="px-2 py-1.5 text-right font-mono text-[0.75rem]">8</td>
+                  <td className="px-2 py-1.5 text-right font-mono text-[0.75rem]">$0.101</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-3 text-[0.85rem] text-muted">
+            Monorepo versus separate repositories for a six-engineer team. Both modes returned the
+            same recommendation and the same verdict; the reversed-order re-run agreed, so the gate
+            was stable. But the red team found a standing objection — that the consensus treats
+            &ldquo;start with a monorepo, split later&rdquo; as cheaply reversible even where the
+            stacks barely share code — and that objection is now the first caveat on an answer that
+            would otherwise have shipped at high confidence. Three extra calls bought one notch of
+            honesty about a case where nothing on the panel disagreed.
+          </p>
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <div>
           <p className="label">Invariants</p>
           <h2 className="mt-1 text-lg font-semibold tracking-tight">
             What configuration cannot break

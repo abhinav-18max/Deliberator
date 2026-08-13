@@ -502,7 +502,7 @@ class Orchestrator:
             ],
             gate_validated=gate_validated,
             calls=len(self._calls),
-            cost_micros=sum(c.usage.cost_micros for c in self._calls),
+            cost_micros=sum(self._cost_micros(c)[0] for c in self._calls),
             duration_ms=int((time.monotonic() - started) * 1000),
         )
         yield self._event(run_id, EventType.RUN_FINAL, final.model_dump(mode="json"))
@@ -511,12 +511,33 @@ class Orchestrator:
         self._seq += 1
         return TraceEvent(run_id=run_id, seq=self._seq, type=type_, payload=payload)
 
+    def _cost_micros(self, completion: Completion) -> tuple[int, bool]:
+        """Reported cost, or an estimate from catalogue pricing when the provider reports none.
+
+        At least one provider (Gemini through OpenRouter) returns no cost, which made the gate
+        look free in the footer. An estimate labelled as an estimate is more honest than a zero
+        that reads as a fact.
+        """
+        reported = completion.usage.cost_micros
+        if reported or self.capabilities is None:
+            return reported, False
+        price = getattr(self.capabilities, "price_per_token", lambda _slug: None)(completion.slug)
+        if not price:
+            return reported, False
+        prompt_rate, completion_rate = price
+        usd = (
+            completion.usage.prompt_tokens * prompt_rate
+            + completion.usage.completion_tokens * completion_rate
+        )
+        return int(round(usd * 1_000_000)), True
+
     def _drain(self, run_id: str) -> list[TraceEvent]:
         """Emit accounting for calls made since the last drain: role, slug, which upstream
         provider actually served it, tokens and cost. Per-stage cost in the trace is what makes
         the fast/rigorous trade visible in the product instead of argued in a README."""
         events = []
         for completion in self._calls[getattr(self, "_drained", 0) :]:
+            cost_micros, estimated = self._cost_micros(completion)
             events.append(
                 self._event(
                     run_id,
@@ -530,7 +551,9 @@ class Orchestrator:
                         "call_key": completion.call_key,
                         "prompt_tokens": completion.usage.prompt_tokens,
                         "completion_tokens": completion.usage.completion_tokens,
-                        "cost_micros": completion.usage.cost_micros,
+                        "cost_micros": cost_micros,
+                        "cost_estimated": estimated,
+                        "repair_attempt": completion.repaired,
                         "latency_ms": completion.latency_ms,
                     },
                 )

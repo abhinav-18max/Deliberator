@@ -1,0 +1,687 @@
+{
+  "run": {
+    "_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+    "request": {
+      "task": "What exactly does `git reset --hard HEAD~1` do to the last commit and to any uncommitted changes in the working tree? Be precise and brief.",
+      "context": null,
+      "models": [
+        "openai/gpt-5.2",
+        "deepseek/deepseek-v3.2",
+        "qwen/qwen3-max"
+      ],
+      "mode": "fast",
+      "overrides": [],
+      "default_model": null
+    },
+    "status": "complete",
+    "stage": "finalize",
+    "created_at": "2026-08-13T08:55:15.458799+00:00",
+    "updated_at": "2026-08-13T08:56:11.765984+00:00",
+    "config_fingerprint": "218bc611983c25cc",
+    "roles": [
+      {
+        "role": "comparator",
+        "slug": "google/gemini-2.5-pro",
+        "prompt_version": "comparator_v1",
+        "enabled": true,
+        "on_panel": false,
+        "notes": []
+      },
+      {
+        "role": "verifier",
+        "slug": "anthropic/claude-haiku-4.5",
+        "prompt_version": "verifier_v1",
+        "enabled": true,
+        "on_panel": false,
+        "notes": []
+      },
+      {
+        "role": "synthesizer",
+        "slug": "anthropic/claude-sonnet-5",
+        "prompt_version": "synthesizer_v1",
+        "enabled": true,
+        "on_panel": false,
+        "notes": []
+      },
+      {
+        "role": "normalizer",
+        "slug": "openai/gpt-5.6-luna",
+        "prompt_version": "normalizer_v1",
+        "enabled": true,
+        "on_panel": false,
+        "notes": []
+      },
+      {
+        "role": "red_team",
+        "slug": "x-ai/grok-4.6",
+        "prompt_version": "redteam_v1",
+        "enabled": true,
+        "on_panel": false,
+        "notes": []
+      }
+    ],
+    "warnings": [],
+    "calls": 7,
+    "confidence": "high",
+    "cost_micros": 78477,
+    "final": {
+      "final_answer": "`git reset --hard HEAD~1` moves the current branch (and `HEAD`) back one commit to the parent of `HEAD`, then forces both the index (staging area) and the working tree to exactly match that parent commit.\n\nEffect on the last commit: it is removed from the branch's history \u2014 it is no longer reachable from the branch tip, though it can typically still be recovered via the reflog for a period of time.\n\nEffect on uncommitted changes: any staged and unstaged modifications to tracked files are discarded and overwritten to match the parent commit. Untracked files are not removed by this command, except in the specific case where an untracked file sits in the way of a tracked file being restored \u2014 in that narrow case it is deleted so the tracked version can be written.",
+      "label": "verified",
+      "resolution": "verified",
+      "confidence": "high",
+      "caveats": [
+        "Position(s) s2 were set aside because cited sources settled an axis against them; they could not then win on a head-count.",
+        "Surviving dissent (s2): one position held that the command discards all uncommitted changes irreversibly and left the effect on untracked files unspecified. This was not adopted \u2014 the resolved answer is that untracked files are generally preserved.",
+        "Evidence conflict: git-scm.com/git-scm.dev phrase the behavior as '--hard' 'may overwrite untracked files,' which reads ambiguously, while the Ubuntu manpage clarifies this only happens when an untracked file blocks writing a tracked file. The winning position relies on the Ubuntu manpage's more precise wording.",
+        "If your working tree has untracked files that happen to occupy the same path as a file being restored from the parent commit, those specific untracked files will be deleted \u2014 otherwise untracked files survive."
+      ],
+      "rung": 2,
+      "tie_break_reason": null,
+      "unresolved_disputes": [],
+      "dissent": "oblivious",
+      "panel": [
+        "openai/gpt-5.2",
+        "qwen/qwen3-max",
+        "deepseek/deepseek-v3.2"
+      ],
+      "referees": [
+        {
+          "role": "comparator",
+          "slug": "google/gemini-2.5-pro",
+          "prompt_version": "comparator_v1",
+          "off_panel": true
+        },
+        {
+          "role": "verifier",
+          "slug": "anthropic/claude-haiku-4.5",
+          "prompt_version": "verifier_v1",
+          "off_panel": true
+        },
+        {
+          "role": "synthesizer",
+          "slug": "anthropic/claude-sonnet-5",
+          "prompt_version": "synthesizer_v1",
+          "off_panel": true
+        },
+        {
+          "role": "normalizer",
+          "slug": "openai/gpt-5.6-luna",
+          "prompt_version": "normalizer_v1",
+          "off_panel": true
+        },
+        {
+          "role": "red_team",
+          "slug": "x-ai/grok-4.6",
+          "prompt_version": "redteam_v1",
+          "off_panel": true
+        }
+      ],
+      "gate_validated": true,
+      "calls": 7,
+      "cost_micros": 78477,
+      "duration_ms": 56129
+    },
+    "label": "verified"
+  },
+  "events": [
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 1,
+      "type": "run.started",
+      "ts": "2026-08-13T08:55:15.526153Z",
+      "payload": {
+        "task": "What exactly does `git reset --hard HEAD~1` do to the last commit and to any uncommitted changes in the working tree? Be precise and brief.",
+        "has_context": false,
+        "models": [
+          "openai/gpt-5.2",
+          "deepseek/deepseek-v3.2",
+          "qwen/qwen3-max"
+        ],
+        "mode": "fast",
+        "floor_model": "openai/gpt-5.2",
+        "roles": [
+          {
+            "role": "comparator",
+            "slug": "google/gemini-2.5-pro",
+            "prompt_version": "comparator_v1",
+            "enabled": true,
+            "on_panel": false,
+            "notes": []
+          },
+          {
+            "role": "verifier",
+            "slug": "anthropic/claude-haiku-4.5",
+            "prompt_version": "verifier_v1",
+            "enabled": true,
+            "on_panel": false,
+            "notes": []
+          },
+          {
+            "role": "synthesizer",
+            "slug": "anthropic/claude-sonnet-5",
+            "prompt_version": "synthesizer_v1",
+            "enabled": true,
+            "on_panel": false,
+            "notes": []
+          },
+          {
+            "role": "normalizer",
+            "slug": "openai/gpt-5.6-luna",
+            "prompt_version": "normalizer_v1",
+            "enabled": true,
+            "on_panel": false,
+            "notes": []
+          },
+          {
+            "role": "red_team",
+            "slug": "x-ai/grok-4.6",
+            "prompt_version": "redteam_v1",
+            "enabled": true,
+            "on_panel": false,
+            "notes": []
+          }
+        ],
+        "gate_validated": true,
+        "warnings": [],
+        "config_fingerprint": "218bc611983c25cc"
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 2,
+      "type": "stage.entered",
+      "ts": "2026-08-13T08:55:15.630403Z",
+      "payload": {
+        "stage": "guard"
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 3,
+      "type": "stage.entered",
+      "ts": "2026-08-13T08:55:15.734725Z",
+      "payload": {
+        "stage": "fanout"
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 4,
+      "type": "panel.answer",
+      "ts": "2026-08-13T08:55:15.886829Z",
+      "payload": {
+        "model": "openai/gpt-5.2",
+        "answer": "`git reset --hard HEAD~1` moves the current branch (and `HEAD`) back one commit to `HEAD`\u2019s parent, and then forces both the index (staging area) and the working tree to exactly match that commit.\n\nEffect on the last commit: it is removed from the branch history (no longer reachable from the branch tip), though it can typically still be recovered via the reflog for a while.\n\nEffect on uncommitted changes: any staged and unstaged modifications to tracked files are discarded/overwritten. Untracked files are not removed.",
+        "key_claims": [
+          "It moves the current branch tip and HEAD to the commit referenced by HEAD~1 (the parent of the current HEAD).",
+          "With --hard, the index is reset to match the target commit.",
+          "With --hard, the working tree\u2019s tracked files are reset to match the target commit, discarding staged and unstaged changes.",
+          "The tip commit that was previously HEAD becomes unreachable from the branch but is usually recoverable via reflog temporarily.",
+          "Untracked files are not deleted by git reset --hard."
+        ],
+        "assumptions": [
+          "You are on a normal branch with HEAD pointing to the tip commit (not in a detached-HEAD state).",
+          "No special options like --keep/--merge are in effect; behavior described is standard reset semantics.",
+          "The question concerns effects on tracked files; untracked/ignored handling is explicitly noted."
+        ],
+        "expected_consensus": "Most capable models will say it moves HEAD/branch back one commit and makes both index and working tree match that earlier commit, thereby discarding the last commit from the branch and wiping any uncommitted tracked changes; many will also mention reflog recoverability and that untracked files remain.",
+        "normalized": false,
+        "latency_ms": 8646,
+        "cost_micros": 7556
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 5,
+      "type": "panel.answer",
+      "ts": "2026-08-13T08:55:16.183362Z",
+      "payload": {
+        "model": "qwen/qwen3-max",
+        "answer": "`git reset --hard HEAD~1` discards the most recent commit (moves the current branch pointer to the parent of HEAD) and overwrites the working tree and index to match that parent commit, thereby permanently deleting both the last commit and any uncommitted changes in the working directory and staging area.",
+        "key_claims": [
+          "`git reset --hard HEAD~1` moves the current branch reference to the parent of the current HEAD commit.",
+          "The `--hard` option resets both the index (staging area) and the working tree to match the target commit (HEAD~1).",
+          "Any uncommitted changes in the working tree or index are irreversibly lost after this command.",
+          "The commit previously at HEAD becomes unreachable (unless referenced elsewhere) and may be garbage-collected."
+        ],
+        "assumptions": [
+          "The repository is in a normal state (not in the middle of a merge, rebase, etc.).",
+          "HEAD refers to a regular commit with a parent (i.e., not the initial commit).",
+          "The user has appropriate permissions to modify the working tree files."
+        ],
+        "expected_consensus": "Most capable models will correctly state that `git reset --hard HEAD~1` removes the last commit and discards all uncommitted changes, resetting both the working directory and staging area to the state of the previous commit.",
+        "normalized": false,
+        "latency_ms": 9214,
+        "cost_micros": 1424
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 6,
+      "type": "panel.answer",
+      "ts": "2026-08-13T08:55:16.235215Z",
+      "payload": {
+        "model": "deepseek/deepseek-v3.2",
+        "answer": "The command `git reset --hard HEAD~1` moves the current branch pointer back by one commit, discards that commit from the branch history, and resets both the staging area (index) and the working directory to match the state of the new HEAD commit (the commit before the last one). Any uncommitted changes in the working tree (whether staged or unstaged) are permanently lost.",
+        "key_claims": [
+          "The command moves the current branch pointer to the commit referenced by HEAD~1.",
+          "The commit that was at HEAD before the reset is removed from the branch's commit history.",
+          "The staging area (index) is overwritten with the content of the new HEAD commit.",
+          "The working directory is overwritten with the content of the new HEAD commit.",
+          "Any uncommitted changes in the working tree (staged or unstaged) are discarded and cannot be recovered."
+        ],
+        "assumptions": [
+          "The repository is in a normal state (not in the middle of a merge conflict or other special state).",
+          "HEAD is a direct reference to a branch (i.e., not in a detached HEAD state), though the effect on the branch pointer is similar in detached HEAD.",
+          "There is at least one commit in the history (so HEAD~1 exists).",
+          "The user understands that 'discarded' means the changes are permanently lost unless they were previously committed elsewhere (e.g., in another branch)."
+        ],
+        "expected_consensus": "Most other capable models will state that `git reset --hard HEAD~1` removes the last commit, resets the working directory and staging area to the previous commit, and discards any uncommitted changes.",
+        "normalized": false,
+        "latency_ms": 14606,
+        "cost_micros": 307
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 7,
+      "type": "model.call",
+      "ts": "2026-08-13T08:55:16.292405Z",
+      "payload": {
+        "role": "panel",
+        "slug": "openai/gpt-5.2",
+        "upstream_provider": "OpenAI",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786603814-gRld2HZbseMwlG9XHuNX",
+        "call_key": "1e890e2759f07cbd57c0482d36b45c0f",
+        "prompt_tokens": 486,
+        "completion_tokens": 479,
+        "cost_micros": 7556,
+        "cost_estimated": false,
+        "repair_attempt": false,
+        "latency_ms": 8646
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 8,
+      "type": "model.call",
+      "ts": "2026-08-13T08:55:16.292431Z",
+      "payload": {
+        "role": "panel",
+        "slug": "qwen/qwen3-max",
+        "upstream_provider": "Alibaba",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786603814-ezN0TTjc9VdpaXx5GfKz",
+        "call_key": "93a6868c942c07e4fde5f4785bc935bc",
+        "prompt_tokens": 360,
+        "completion_tokens": 293,
+        "cost_micros": 1424,
+        "cost_estimated": false,
+        "repair_attempt": false,
+        "latency_ms": 9214
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 9,
+      "type": "model.call",
+      "ts": "2026-08-13T08:55:16.292441Z",
+      "payload": {
+        "role": "panel",
+        "slug": "deepseek/deepseek-v3.2",
+        "upstream_provider": "SiliconFlow",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786603815-ZIuxmeyxuwPjlYsg8EiH",
+        "call_key": "49cbe27ef2d5e00462449f0d5c6a47d6",
+        "prompt_tokens": 654,
+        "completion_tokens": 365,
+        "cost_micros": 307,
+        "cost_estimated": false,
+        "repair_attempt": false,
+        "latency_ms": 14606
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 10,
+      "type": "stage.entered",
+      "ts": "2026-08-13T08:55:16.454257Z",
+      "payload": {
+        "stage": "compare"
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 11,
+      "type": "model.call",
+      "ts": "2026-08-13T08:55:54.580755Z",
+      "payload": {
+        "role": "comparator",
+        "slug": "google/gemini-2.5-pro",
+        "upstream_provider": "Google",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786611317-eQQoeVc3nbSzfqEQ2bMH",
+        "call_key": "96631cf88450d6f3d682ed1841fa444e",
+        "prompt_tokens": 2277,
+        "completion_tokens": 3619,
+        "cost_micros": 39036,
+        "cost_estimated": true,
+        "repair_attempt": false,
+        "latency_ms": 37907
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 12,
+      "type": "compare.verdict",
+      "ts": "2026-08-13T08:55:54.631072Z",
+      "payload": {
+        "verdict": "material",
+        "justification": "The models disagree by omission on a key safety detail: whether `git reset --hard` affects untracked files. Model A explicitly states that untracked files are safe, while Models B and C are silent on this point. Their broad warnings about losing \"any uncommitted changes\" could lead a user to incorrectly believe their new, untracked files will be deleted. This difference would cause a cautious user to take different actions (i.e., backing up untracked files) depending on which answer they read.",
+        "unstable": false,
+        "stances": [
+          {
+            "id": "s1",
+            "summary": "The command moves the branch pointer back one commit, discards that commit and any changes to tracked files, but explicitly states that untracked files are not affected.",
+            "members": [
+              "openai/gpt-5.2"
+            ],
+            "strongest": "openai/gpt-5.2"
+          },
+          {
+            "id": "s2",
+            "summary": "The command moves the branch pointer back one commit, discarding that commit and irreversibly losing all uncommitted changes, without specifying the effect on untracked files.",
+            "members": [
+              "deepseek/deepseek-v3.2",
+              "qwen/qwen3-max"
+            ],
+            "strongest": "deepseek/deepseek-v3.2"
+          }
+        ],
+        "dispute_count": 1
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 13,
+      "type": "stage.entered",
+      "ts": "2026-08-13T08:55:54.681046Z",
+      "payload": {
+        "stage": "resolve"
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 14,
+      "type": "dispute.opened",
+      "ts": "2026-08-13T08:55:54.779799Z",
+      "payload": {
+        "id": "d1",
+        "type": "factual",
+        "question": "Does `git reset --hard` delete new, untracked files in the working directory?",
+        "decision_impact": "If untracked files are safe (Stance s1), the user can run the command without needing to back up new files. If their fate is ambiguous or they are assumed to be deleted (Stance s2), a cautious user would back up new files before running the command.",
+        "positions": {
+          "s1": "No, untracked files are not removed.",
+          "s2": "The effect on untracked files is not specified, creating ambiguity and potential risk that they will be deleted along with other uncommitted changes."
+        },
+        "search_query": "does git reset --hard delete untracked files"
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 15,
+      "type": "verify.result",
+      "ts": "2026-08-13T08:56:01.693601Z",
+      "payload": {
+        "dispute_id": "d1",
+        "outcome": "supports",
+        "winning_stance": "s1",
+        "summary": "The sources provide contradictory information about whether `git reset --hard` deletes untracked files. [git-scm.com](https://git-scm.com/docs/git-reset.html) and [git-scm.dev](https://git-scm.dev/docs/git-reset) state that `--hard` will \"overwrite all files and directories\" and \"may overwrite untracked files.\" However, [manpages.ubuntu.com](https://manpages.ubuntu.com/manpages/noble/man1/git-reset.1.html) explicitly states that `--hard` \"Resets the index and working tree\" and \"Any untracked files or directories in the way of writing any tracked files are simply deleted\" \u2014 indicating untracked files are only deleted if they obstruct tracked files, not universally. The phrase \"may overwrite\" in some sources introduces uncertainty about the actual behavior, while the Ubuntu documentation clarifies the conditional nature of deletion. Position s1 (untracked files are not removed) is not fully supported, as sources indicate they can be deleted in certain circumstances. Position s2 (the effect is not specified, creating ambiguity) is partially supported by the conflicting language across sources. | Multiple official Git documentation sources consistently and explicitly state that `git reset --hard` does NOT delete untracked files. [git-scm.com](https://git-scm.com/docs/git-reset.html) states the command \"may overwrite untracked files\" that are \"in the way\" of tracked files being restored, but untracked files themselves are not removed. [manpages.ubuntu.com](https://manpages.ubuntu.com/manpages/noble/man1/git-reset.1.html) clarifies: \"Any untracked files or directories in the way of writing any tracked files are simply deleted\" \u2014 meaning only those blocking the restoration of tracked files are affected, not all untracked files. The documentation is clear and specific: untracked files are preserved unless they directly conflict with restoring tracked files. Position s1 is correct; position s2's claim that the effect is \"not specified\" is contradicted by explicit documentation.",
+        "queries": [
+          "does git reset --hard delete untracked files",
+          "does git reset --hard delete untracked files"
+        ],
+        "citations": [
+          {
+            "url": "https://git-scm.com/docs/git-reset.html",
+            "title": "Git - git-reset Documentation",
+            "snippet": "Overwrite all files and directories with the version from, and may overwrite untracked files. Tracked files not in are removed so that the working tree matches. Update the index to match the new`HEAD`, so nothing will be staged.\n\n...\n\n`--hard`\n\n...\n\n\"pull\" has not made merge commit, so`git``reset``--hard` which is a synonym for`git``reset``--hard``HEAD` clears the mess from the index file and the ",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://manpages.ubuntu.com/manpages/noble/man1/git-reset.1.html",
+            "title": "Ubuntu Manpage: git-reset - Reset current HEAD to the specified state",
+            "snippet": "Resets the index and working tree. Any changes to tracked files in the working tree since are discarded. Any untracked files or directories in the way of writing any tracked files are simply deleted.",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://code.googlesource.com/git/+/HEAD/Documentation/git-reset.adoc",
+            "title": "Documentation/git-reset.adoc - git - Git at Google",
+            "snippet": "| Overwrite all files and directories with the version from _ _, |\n\n...\n\n| `--hard`:: |\n\n...\n\n| and may overwrite untracked files.\n\n...\n\n| removed so that the working tree matches _ _.\n\n...\n\ned files not in _ _ are |\n\n...\n\nthe index to match the new `HEAD`, so nothing will be staged.\n\n...\n\n|\n\n...\n\ncan",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://git-scm.dev/docs/git-reset",
+            "title": "Git - git-reset Documentation",
+            "snippet": "`--hard`\n...\nOverwrite all files and directories with the version from, and may overwrite untracked files. Tracked files not in are removed so that the working tree matches. Update the index to match the new`HEAD`, so nothing will be staged.",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.kernel.org/pub/software/scm/git/docs/git-reset.html",
+            "title": "git-reset(1)",
+            "snippet": "`--hard`\n...\nOverwrite all files and directories with the version from, and may overwrite untracked files. Tracked files not in are removed so that the working tree matches. Update the index to match the new`HEAD`, so nothing will be staged.",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://git-scm.com/docs/git-reset.html",
+            "title": "Git - git-reset Documentation",
+            "snippet": "Overwrite all files and directories with the version from, and may overwrite untracked files. Tracked files not in are removed so that the working tree matches.\n\n...\n\nthe index to match the new`HEAD`, so nothing will be staged.\n\n...\n\n`--hard`\n\n...\n\n\"pull\" has not made merge commit, so`git``reset``--hard` which is a synonym for`git``reset``--hard``HEAD` clears the mess from the index file and the w",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://code.googlesource.com/git/+/HEAD/Documentation/git-reset.adoc",
+            "title": "Documentation/git-reset.adoc - git - Git at Google",
+            "snippet": "| Overwrite all files and directories with the version from _ _, |\n\n...\n\n| `--hard`:: |\n\n...\n\n| and may overwrite untracked files.\n\n...\n\n| removed so that the working tree matches _ _.\n\n...\n\ned files not in _ _ are |\n\n...\n\nthe index to match the new `HEAD`, so nothing will be staged.\n\n...\n\n|\n\n...\n\ncan",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.kernel.org/pub/software/scm/git/docs/git-reset.html",
+            "title": "git-reset(1)",
+            "snippet": "`--hard`\n...\nOverwrite all files and directories with the version from, and may overwrite untracked files. Tracked files not in are removed so that the working tree matches. Update the index to match the new`HEAD`, so nothing will be staged.",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://git-scm.dev/docs/git-reset",
+            "title": "Git - git-reset Documentation",
+            "snippet": "`--hard`\n...\nOverwrite all files and directories with the version from, and may overwrite untracked files. Tracked files not in are removed so that the working tree matches. Update the index to match the new`HEAD`, so nothing will be staged.",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://manpages.ubuntu.com/manpages/noble/man1/git-reset.1.html",
+            "title": "Ubuntu Manpage: git-reset - Reset current HEAD to the specified state",
+            "snippet": "Resets the index and working tree. Any changes to tracked files in the working tree since are discarded. Any untracked files or directories in the way of writing any tracked files are simply deleted.",
+            "start_index": 0,
+            "end_index": 0
+          }
+        ],
+        "supporting_urls": [
+          "https://git-scm.com/docs/git-reset.html",
+          "https://git-scm.dev/docs/git-reset",
+          "https://manpages.ubuntu.com/manpages/noble/man1/git-reset.1.html"
+        ]
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 16,
+      "type": "dispute.closed",
+      "ts": "2026-08-13T08:56:01.758108Z",
+      "payload": {
+        "dispute_id": "d1",
+        "mechanism": "verification",
+        "resolved": true,
+        "winning_stance": "s1",
+        "rounds": 0,
+        "note": "evidence beats rhetoric"
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 17,
+      "type": "model.call",
+      "ts": "2026-08-13T08:56:01.809857Z",
+      "payload": {
+        "role": "verifier",
+        "slug": "anthropic/claude-haiku-4.5",
+        "upstream_provider": "Amazon Bedrock",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786611354-7iiQkw7txl0r83JiamUi",
+        "call_key": "b8ab7feb8b8094746411a7bf2a4ed06e",
+        "prompt_tokens": 1706,
+        "completion_tokens": 367,
+        "cost_micros": 10541,
+        "cost_estimated": false,
+        "repair_attempt": false,
+        "latency_ms": 5473
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 18,
+      "type": "model.call",
+      "ts": "2026-08-13T08:56:01.809879Z",
+      "payload": {
+        "role": "verifier",
+        "slug": "anthropic/claude-haiku-4.5",
+        "upstream_provider": "Amazon Bedrock",
+        "routing_unpinned": false,
+        "generation_id": "gen-1786611355-cd2L7xrNisiulr5u4xjO",
+        "call_key": "9edb8670473bf5e145bbbacaee86b0a4",
+        "prompt_tokens": 1666,
+        "completion_tokens": 287,
+        "cost_micros": 10101,
+        "cost_estimated": false,
+        "repair_attempt": false,
+        "latency_ms": 6753
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 19,
+      "type": "stage.entered",
+      "ts": "2026-08-13T08:56:01.911330Z",
+      "payload": {
+        "stage": "finalize"
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 20,
+      "type": "ladder.rung",
+      "ts": "2026-08-13T08:56:02.013241Z",
+      "payload": {
+        "rung": 2,
+        "label": "verified",
+        "resolution": "verified",
+        "confidence": "high",
+        "winning_stance": "s1",
+        "tie_break_reason": null,
+        "unresolved": [],
+        "branches": []
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 21,
+      "type": "model.call",
+      "ts": "2026-08-13T08:56:11.604068Z",
+      "payload": {
+        "role": "synthesizer",
+        "slug": "anthropic/claude-sonnet-5",
+        "upstream_provider": "Amazon Bedrock",
+        "routing_unpinned": true,
+        "generation_id": "gen-1786611362-m0VKh6kxXApHHwi30lIx",
+        "call_key": "eff58a649fb3bfc28c5612b413c7e495",
+        "prompt_tokens": 2211,
+        "completion_tokens": 509,
+        "cost_micros": 9512,
+        "cost_estimated": false,
+        "repair_attempt": false,
+        "latency_ms": 9384
+      }
+    },
+    {
+      "run_id": "01KZX5ACR26PF4BDZTZFHWJFC7",
+      "seq": 22,
+      "type": "run.final",
+      "ts": "2026-08-13T08:56:11.655958Z",
+      "payload": {
+        "final_answer": "`git reset --hard HEAD~1` moves the current branch (and `HEAD`) back one commit to the parent of `HEAD`, then forces both the index (staging area) and the working tree to exactly match that parent commit.\n\nEffect on the last commit: it is removed from the branch's history \u2014 it is no longer reachable from the branch tip, though it can typically still be recovered via the reflog for a period of time.\n\nEffect on uncommitted changes: any staged and unstaged modifications to tracked files are discarded and overwritten to match the parent commit. Untracked files are not removed by this command, except in the specific case where an untracked file sits in the way of a tracked file being restored \u2014 in that narrow case it is deleted so the tracked version can be written.",
+        "label": "verified",
+        "resolution": "verified",
+        "confidence": "high",
+        "caveats": [
+          "Position(s) s2 were set aside because cited sources settled an axis against them; they could not then win on a head-count.",
+          "Surviving dissent (s2): one position held that the command discards all uncommitted changes irreversibly and left the effect on untracked files unspecified. This was not adopted \u2014 the resolved answer is that untracked files are generally preserved.",
+          "Evidence conflict: git-scm.com/git-scm.dev phrase the behavior as '--hard' 'may overwrite untracked files,' which reads ambiguously, while the Ubuntu manpage clarifies this only happens when an untracked file blocks writing a tracked file. The winning position relies on the Ubuntu manpage's more precise wording.",
+          "If your working tree has untracked files that happen to occupy the same path as a file being restored from the parent commit, those specific untracked files will be deleted \u2014 otherwise untracked files survive."
+        ],
+        "rung": 2,
+        "tie_break_reason": null,
+        "unresolved_disputes": [],
+        "dissent": "oblivious",
+        "panel": [
+          "openai/gpt-5.2",
+          "qwen/qwen3-max",
+          "deepseek/deepseek-v3.2"
+        ],
+        "referees": [
+          {
+            "role": "comparator",
+            "slug": "google/gemini-2.5-pro",
+            "prompt_version": "comparator_v1",
+            "off_panel": true
+          },
+          {
+            "role": "verifier",
+            "slug": "anthropic/claude-haiku-4.5",
+            "prompt_version": "verifier_v1",
+            "off_panel": true
+          },
+          {
+            "role": "synthesizer",
+            "slug": "anthropic/claude-sonnet-5",
+            "prompt_version": "synthesizer_v1",
+            "off_panel": true
+          },
+          {
+            "role": "normalizer",
+            "slug": "openai/gpt-5.6-luna",
+            "prompt_version": "normalizer_v1",
+            "off_panel": true
+          },
+          {
+            "role": "red_team",
+            "slug": "x-ai/grok-4.6",
+            "prompt_version": "redteam_v1",
+            "off_panel": true
+          }
+        ],
+        "gate_validated": true,
+        "calls": 7,
+        "cost_micros": 78477,
+        "duration_ms": 56129
+      }
+    }
+  ]
+}

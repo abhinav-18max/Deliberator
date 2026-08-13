@@ -314,6 +314,11 @@ Re-polling would cost k calls and is not implemented.
 **Single-process streaming.** Live event fan-out is in-memory, so running the API with multiple
 workers needs the change-stream swap noted in `store/broadcast.py`.
 
+**Cost reporting is partly estimated.** Some providers return no cost with the generation (Gemini
+through OpenRouter reports zero), which made the comparator look free and understated a full run by
+about half. Those calls are now estimated from catalogue pricing × tokens and flagged
+`cost_estimated` in the trace, but an estimate is not a bill.
+
 ## 9. What I would do next, in order
 
 1. **Re-poll silent cluster members** after debate, so a majority is genuinely post-argument.

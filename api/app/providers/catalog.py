@@ -56,6 +56,14 @@ class Capabilities:
     # the only real capability question is whether native search is available.
     supports_web = supports_native_web
 
+    def price_per_token(self, slug: str) -> tuple[float, float] | None:
+        """(prompt, completion) USD per token, or None if unknown."""
+        pricing = (self._entries.get(slug) or {}).get("pricing") or {}
+        try:
+            return float(pricing["prompt"]), float(pricing["completion"])
+        except (KeyError, TypeError, ValueError):
+            return None
+
     def context_length(self, slug: str) -> int | None:
         entry = self._entries.get(slug)
         if not entry:

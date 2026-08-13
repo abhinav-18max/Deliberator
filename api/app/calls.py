@@ -126,7 +126,9 @@ class Caller:
                 ]
             }
         )
-        repaired = await self.provider.complete(repair_spec, timeout_s=timeout_s)
+        repaired = (await self.provider.complete(repair_spec, timeout_s=timeout_s)).model_copy(
+            update={"repaired": True}
+        )
         if self.on_call:
             self.on_call(repaired)
         return Call(
