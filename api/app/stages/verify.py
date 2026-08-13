@@ -94,6 +94,7 @@ async def _one_framing(
             schema_name="verification",
             web=True,
             web_engine=role.search_engine,
+            temperature=role.temperature,
             fallback_slugs=role.fallbacks,
             timeout_s=timeout_s,
         )

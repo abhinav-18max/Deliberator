@@ -23,6 +23,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/runs" className="text-muted hover:text-ink">
                 History
               </Link>
+              <Link href="/architecture" className="text-muted hover:text-ink">
+                Architecture
+              </Link>
             </nav>
           </div>
         </header>

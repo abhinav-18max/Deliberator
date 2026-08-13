@@ -36,6 +36,7 @@ async def recover(
             prompt_version=role.prompt_version,
             out_model=NormalizerOut,
             schema_name="normalizer",
+            temperature=role.temperature,
             fallback_slugs=role.fallbacks,
             timeout_s=timeout_s,
         )

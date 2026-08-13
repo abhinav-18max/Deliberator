@@ -151,6 +151,7 @@ async def run(
             prompt_version=role.prompt_version,
             out_model=SynthesisOut,
             schema_name="synthesis",
+            temperature=role.temperature,
             fallback_slugs=role.fallbacks,
             timeout_s=timeout_s,
         )

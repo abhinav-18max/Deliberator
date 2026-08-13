@@ -22,11 +22,6 @@ class Citation(BaseModel):
     start_index: int | None = None
     end_index: int | None = None
 
-    def covers(self, start: int, end: int) -> bool:
-        if self.start_index is None or self.end_index is None:
-            return False
-        return self.start_index <= start and self.end_index >= end
-
 
 class VerifyOutcome(StrEnum):
     SUPPORTS = "supports"  # one side is backed by cited sources

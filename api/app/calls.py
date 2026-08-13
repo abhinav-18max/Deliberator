@@ -34,10 +34,6 @@ class Call:
     parsed: BaseModel | None = None
     repaired: bool = False
 
-    @property
-    def ok(self) -> bool:
-        return self.parsed is not None
-
 
 def extract_json(text: str) -> dict | None:
     if not text:
@@ -89,7 +85,6 @@ class Caller:
                 messages=messages,
                 prompt_version=prompt_version,
                 schema_name=schema_name,
-                json_schema=None,
                 temperature=temperature,
                 web=web,
                 web_engine=web_engine,

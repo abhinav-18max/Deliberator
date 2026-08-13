@@ -31,7 +31,6 @@ class CallSpec(BaseModel):
     messages: list[dict[str, str]]
     prompt_version: str = ""
     schema_name: str | None = None
-    json_schema: dict[str, Any] | None = None
     temperature: float = 0.0
     web: bool = False  # grounded search — resolution only, never answering
     web_engine: str = "exa"  # "exa" = gateway retrieval, "native" = the model's own search

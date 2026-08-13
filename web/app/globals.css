@@ -54,3 +54,141 @@ body {
   border: 1px solid var(--color-line);
   border-radius: 0.5rem;
 }
+
+/* ---- figures ------------------------------------------------------------
+   The encoding is the argument: deterministic code is neutral and outlined,
+   a model call is filled, and the hue says which seat. Same language as the
+   trace viewer's left borders. */
+.figure-scroll {
+  overflow-x: auto;
+}
+.figure-scroll svg {
+  display: block;
+  height: auto;
+}
+
+.wire {
+  fill: none;
+  stroke: var(--color-ink);
+  stroke-width: 1.4;
+}
+.wire-dash {
+  fill: none;
+  stroke: var(--color-ink);
+  stroke-width: 1.2;
+  stroke-dasharray: 4 3;
+}
+.wire-faint {
+  fill: none;
+  stroke: var(--color-muted);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+  opacity: 0.7;
+}
+.head {
+  fill: var(--color-ink);
+}
+.wire-v {
+  fill: none;
+  stroke: var(--color-external-line);
+  stroke-width: 1.4;
+}
+.head-v {
+  fill: var(--color-external-line);
+}
+
+.b-code {
+  fill: var(--color-surface);
+  stroke: var(--color-muted);
+  stroke-width: 1.1;
+  stroke-dasharray: 5 3;
+}
+.b-solid {
+  fill: var(--color-surface-2, #eef0f4);
+  stroke: var(--color-muted);
+  stroke-width: 1.1;
+}
+.b-panel {
+  fill: var(--color-panel-bg);
+  stroke: var(--color-panel-line);
+  stroke-width: 1.2;
+}
+.b-ref {
+  fill: var(--color-referee-bg);
+  stroke: var(--color-referee-line);
+  stroke-width: 1.2;
+}
+.b-ref-d {
+  fill: var(--color-referee-bg);
+  stroke: var(--color-referee-line);
+  stroke-width: 1.2;
+  stroke-dasharray: 5 3;
+}
+.b-ext {
+  fill: var(--color-external-bg);
+  stroke: var(--color-external-line);
+  stroke-width: 1.2;
+}
+.b-out {
+  fill: var(--color-surface);
+  stroke: var(--color-ink);
+  stroke-width: 1.4;
+}
+.b-band {
+  fill: var(--color-surface-2, #eef0f4);
+  stroke: var(--color-muted);
+  stroke-width: 1.1;
+  stroke-dasharray: 5 3;
+}
+.c-high {
+  fill: var(--color-referee-bg);
+  stroke: var(--color-referee-line);
+  stroke-width: 1;
+}
+.c-med {
+  fill: var(--color-panel-bg);
+  stroke: var(--color-panel-line);
+  stroke-width: 1;
+}
+.c-low {
+  fill: var(--color-alarm-bg);
+  stroke: var(--color-alarm-line);
+  stroke-width: 1;
+}
+.c-chip {
+  fill: var(--color-surface-2, #eef0f4);
+  stroke: var(--color-line);
+  stroke-width: 1;
+}
+
+.ttl {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  fill: var(--color-ink);
+  letter-spacing: 0.04em;
+}
+.sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  fill: var(--color-muted);
+}
+.lbl {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  fill: var(--color-muted);
+}
+.lbl-ink {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  fill: var(--color-ink);
+}
+.hue-t {
+  fill: var(--color-referee);
+}
+.hue-v {
+  fill: var(--color-external);
+}
+.hue-r {
+  fill: var(--color-alarm);
+}

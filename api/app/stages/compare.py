@@ -54,10 +54,6 @@ class Presentation:
     text: str
     label_to_slug: dict[str, str]
 
-    @property
-    def slug_to_label(self) -> dict[str, str]:
-        return {v: k for k, v in self.label_to_slug.items()}
-
 
 def present(answers: list[PanelAnswer], order: list[int]) -> Presentation:
     blocks: list[str] = []
@@ -161,6 +157,7 @@ async def run(
         prompt_version=role.prompt_version,
         out_model=ComparisonOut,
         schema_name="comparison",
+        temperature=role.temperature,
         fallback_slugs=role.fallbacks,
         timeout_s=timeout_s,
     )

@@ -49,6 +49,7 @@ async def run(
             prompt_version=role.prompt_version,
             out_model=RedTeamOut,
             schema_name="red_team",
+            temperature=role.temperature,
             fallback_slugs=role.fallbacks,
             timeout_s=timeout_s,
         )

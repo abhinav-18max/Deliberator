@@ -24,7 +24,6 @@ from .contracts import Role
 from .settings import Config, RoleConfig
 
 _FATAL_IF_INCAPABLE = {Role.COMPARATOR, Role.SYNTHESIZER}
-_OPTIONAL = {Role.NORMALIZER, Role.RED_TEAM}
 
 
 class ConfigError(ValueError):
