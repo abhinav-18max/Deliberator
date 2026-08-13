@@ -4,10 +4,18 @@ Two models arguing about a checkable fact is rhetoric versus rhetoric when the o
 could just look. And a concession to evidence is the one kind of mind-changing that is
 reliably legitimate, rather than trained-in agreeableness.
 
-The rule that makes this honest is admissibility: grounding is model-discretionary, so a model
-may answer from memory and return no citations. That response is an opinion in a lab coat and
-is recorded as UNVERIFIABLE — never as `verified`. Rung 2 of the ladder is only reachable with
-an artifact attached.
+The rule that makes this honest is admissibility, and it has two halves:
+
+1.  Sources must have been retrieved. A model answering from parametric memory returns no
+    citations, and that response is an opinion in a lab coat — recorded UNVERIFIABLE, never
+    `verified`.
+2.  The verifier must name which retrieved sources carry its verdict, and every named URL must
+    be one that was actually retrieved. This half exists because retrieval is performed by the
+    gateway: annotations are then always present, so their presence alone stops proving the
+    model used them. A URL the model produces that was never fetched is a fabricated citation,
+    and it invalidates the result rather than decorating it.
+
+Rung 2 of the ladder is reachable only with both halves satisfied.
 
 Retrieval is run once per position, framed toward each side in turn, for the same reason the
 comparator is re-run with reversed order: framing is bias. If either framing finds support for
@@ -33,8 +41,8 @@ from ..roles import ResolvedRole
 
 
 def citations_from(annotations: list[dict]) -> list[Citation]:
-    """OpenRouter normalises every provider's native search into OpenAI-shaped
-    `url_citation` annotations, so one parser covers Gemini grounding and the rest."""
+    """OpenRouter normalises both retrieval engines into OpenAI-shaped `url_citation`
+    annotations, so one parser covers gateway search and provider-native grounding alike."""
     out: list[Citation] = []
     for item in annotations or []:
         if item.get("type") != "url_citation":
@@ -85,6 +93,8 @@ async def _one_framing(
             out_model=VerificationOut,
             schema_name="verification",
             web=True,
+            web_engine=role.search_engine,
+            fallback_slugs=role.fallbacks,
             timeout_s=timeout_s,
         )
     except ProviderError:
@@ -120,7 +130,9 @@ async def run(
     citations: list[Citation] = []
     winners: set[str] = set()
     summaries: list[str] = []
+    supporting: list[str] = []
     admissible_framings = 0
+    fabricated: list[str] = []
 
     for parsed, cites, query in results:
         queries.append(query)
@@ -130,17 +142,33 @@ async def run(
         if not cites:
             # Answered without retrieving. Inadmissible: it carries no artifact.
             continue
+        retrieved = {c.url for c in cites}
+        named = [u for u in parsed.supporting_urls if u]
+        invented = [u for u in named if u not in retrieved]
+        if invented:
+            # A citation that was never fetched is fabricated. Discard the whole framing
+            # rather than keeping the half of it that happens to check out.
+            fabricated.extend(invented)
+            continue
+        if not named:
+            continue
         admissible_framings += 1
         citations.extend(cites)
+        supporting.extend(named)
         if parsed.outcome is VerifyOutcome.SUPPORTS and parsed.winning_stance:
             winners.add(parsed.winning_stance)
 
     summary = " | ".join(s for s in summaries if s)
+    if fabricated:
+        summary += (
+            f" [Discarded a framing that cited {len(fabricated)} source(s) never retrieved.]"
+        )
     if admissible_framings == 0:
         return Verification(
             dispute_id=dispute.id,
             outcome=VerifyOutcome.UNVERIFIABLE,
-            summary=summary or "No sources were retrieved, so nothing is verified.",
+            summary=summary
+            or "No admissible sources came back, so nothing is verified.",
             queries=queries,
             citations=citations,
         )
@@ -152,6 +180,7 @@ async def run(
             or "Sources were retrieved but do not settle the question in either direction.",
             queries=queries,
             citations=citations,
+            supporting_urls=sorted(set(supporting)),
         )
 
     note = "" if admissible_framings == 2 else " (only one framing retrieved sources)"
@@ -162,4 +191,5 @@ async def run(
         summary=summary + note,
         queries=queries,
         citations=citations,
+        supporting_urls=sorted(set(supporting)),
     )

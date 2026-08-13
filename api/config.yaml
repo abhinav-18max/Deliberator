@@ -2,9 +2,10 @@
 # `allow_request_overrides`; the comparator is never caller-overridable because its
 # structured output *is* the control flow.
 #
-# Slugs below are PROVISIONAL. `make doctor` reconciles them against OpenRouter's live
-# catalogue and prints the closest available alternative for anything that has rotted —
-# a pinned slug that vanished should fail at boot with a suggestion, never mid-run.
+# Slugs below were reconciled against OpenRouter's live catalogue. Re-run `make doctor` after
+# any gap in work: models are retired regularly, and it prints the closest available
+# alternative for anything that has rotted. A pin that vanished should fail at boot with a
+# suggestion, never mid-run.
 
 caps:
   max_panel: 5
@@ -19,49 +20,56 @@ caps:
 # family-diversity and min-context rules are enforceable and no junk model can break
 # fan-out mid-demo.
 panel_shortlist:
-  - openai/gpt-4o
-  - anthropic/claude-3.7-sonnet
-  - google/gemini-2.5-flash
-  - deepseek/deepseek-chat
-  - qwen/qwen-2.5-72b-instruct
-  - meta-llama/llama-3.3-70b-instruct
-  - mistralai/mistral-large
-  - x-ai/grok-2-1212
+  - openai/gpt-5.2
+  - anthropic/claude-sonnet-5
+  - google/gemini-3.5-flash
+  - deepseek/deepseek-v3.2
+  - qwen/qwen3-max
+  - meta-llama/llama-4-maverick
+  - mistralai/mistral-medium-3.1
+  - x-ai/grok-4.6
 
 # Three distinct families, and deliberately disjoint from every referee chain below so a
 # default run needs no substitution and carries no self-preference stamp. Selecting a model
 # that is also a referee is allowed — the invariant fires at request time and says so.
 panel_default:
-  - openai/gpt-4o
-  - deepseek/deepseek-chat
-  - qwen/qwen-2.5-72b-instruct
+  - openai/gpt-5.2
+  - deepseek/deepseek-v3.2
+  - qwen/qwen3-max
 
 # Each role is a fallback chain: a single pinned slug will rate-limit mid-demo.
 # off_panel: require -> substitute or stamp the run; prefer -> warn only.
 roles:
   comparator:
-    chain: [google/gemini-2.5-pro, openai/gpt-4o]
+    # Reads every answer, so it wants the largest context in the stack.
+    chain: [google/gemini-2.5-pro, anthropic/claude-sonnet-5]
     prompt_version: comparator_v1
     require_structured: true
     off_panel: prefer
     temperature: 0.0
   verifier:
-    chain: [google/gemini-2.5-flash, google/gemini-2.5-pro]
+    # search_engine: exa — OpenRouter performs the retrieval and normalises citations, so the
+    # seat is not restricted to the short list of models advertising their own search (which
+    # currently excludes every Gemini model and would pin us to a 2023-cutoff model — exactly
+    # wrong for a verifier, whose most valuable case is a fact that changed recently).
+    chain: [anthropic/claude-haiku-4.5, google/gemini-3.5-flash]
     prompt_version: verifier_v1
     require_structured: true
     require_web: true
+    search_engine: exa
     off_panel: require
     temperature: 0.0
   synthesizer:
     # A different family from the comparator, so the writer does not inherit the gate's
     # framing of the dispute along with its verdict.
-    chain: [anthropic/claude-3.7-sonnet, mistralai/mistral-large]
+    chain: [anthropic/claude-sonnet-5, mistralai/mistral-medium-3.1]
     prompt_version: synthesizer_v1
     require_structured: true
     off_panel: require
     temperature: 0.0
   normalizer:
-    chain: [anthropic/claude-3.5-haiku, google/gemini-2.5-flash]
+    # Extractive and high-volume, so cheap and long-context matters more than reasoning.
+    chain: [openai/gpt-5.6-luna, anthropic/claude-haiku-4.5]
     prompt_version: normalizer_v1
     require_structured: true
     off_panel: prefer
@@ -69,7 +77,7 @@ roles:
   red_team:
     # Prefer a family absent from the default panel entirely: the whole value of this seat is
     # running a different search over the same knowledge.
-    chain: [mistralai/mistral-large, anthropic/claude-3.7-sonnet]
+    chain: [x-ai/grok-4.6, anthropic/claude-sonnet-5]
     prompt_version: redteam_v1
     require_structured: true
     off_panel: prefer

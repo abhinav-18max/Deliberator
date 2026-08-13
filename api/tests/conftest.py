@@ -227,14 +227,21 @@ def synthesis_out(text: str = "Use a token bucket.", caveats: list[str] | None =
     return {"final_answer": text, "caveats": caveats or []}
 
 
+CITED_URL = "https://example.org/limiters"
+
+
 def verification_out(
-    outcome: str = "supports", winner: str | None = "s1", cited: bool = True
+    outcome: str = "supports",
+    winner: str | None = "s1",
+    cited: bool = True,
+    supporting: list[str] | None = None,
 ) -> dict[str, Any]:
     doc: dict[str, Any] = {
         "__parsed__": {
             "outcome": outcome,
             "winning_stance": winner,
             "summary": "the sources agree",
+            "supporting_urls": [CITED_URL] if supporting is None else supporting,
         }
     }
     if cited:

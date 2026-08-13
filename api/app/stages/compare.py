@@ -157,6 +157,7 @@ async def run(
         prompt_version=role.prompt_version,
         out_model=ComparisonOut,
         schema_name="comparison",
+        fallback_slugs=role.fallbacks,
         timeout_s=timeout_s,
     )
     if call.parsed is None:

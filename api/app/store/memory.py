@@ -6,6 +6,8 @@ from ..contracts import TraceEvent
 
 
 class MemoryStore:
+    durable = False
+
     def __init__(self) -> None:
         self.runs: dict[str, dict[str, Any]] = {}
         self.events: dict[str, dict[int, TraceEvent]] = {}

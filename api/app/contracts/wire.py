@@ -99,6 +99,12 @@ class VerificationOut(BaseModel):
     outcome: VerifyOutcome
     winning_stance: str | None = None
     summary: str = Field(description="What the sources say. Cite them inline.")
+    supporting_urls: list[str] = Field(
+        default_factory=list,
+        description="The URLs from the retrieved sources that actually carry your verdict. "
+        "Every entry must be one of the sources you were given; a URL that was not retrieved "
+        "invalidates the whole result.",
+    )
 
 
 class SynthesisOut(BaseModel):

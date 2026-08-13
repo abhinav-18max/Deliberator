@@ -162,6 +162,40 @@ async def test_uncited_verification_is_never_labelled_verified():
     assert final["unresolved_disputes"] == ["d1"]
 
 
+async def test_a_citation_that_was_never_retrieved_invalidates_the_verification():
+    """The failure mode gateway retrieval introduces: sources are always attached, so their
+    presence alone stops proving the verifier used them. Naming a URL that was not fetched is a
+    fabricated citation, and it must discard the result rather than decorate it."""
+    orch = orchestrator(
+        {
+            "panel:m1": [panel_out("token bucket")],
+            "panel:m2": [panel_out("token bucket")],
+            "panel:m3": [panel_out("leaky bucket")],
+            "comparator": [
+                comparison_out(
+                    "material",
+                    [stance_out("s1", ["A", "B"]), stance_out("s2", ["C"])],
+                    disputes=[dispute_out(kind="factual", query="token bucket burst behaviour")],
+                )
+            ],
+            "verifier": [
+                verification_out(supporting=["https://invented.example/never-fetched"]),
+                verification_out(supporting=["https://also-invented.example/nope"]),
+            ],
+            "debater": [turn_out([act("s2", "defend")]), turn_out([act("s1", "defend")])],
+            "synthesizer": [synthesis_out()],
+        }
+    )
+
+    events = await collect(orch, RUN, request())
+    verification = payload_of(events, EventType.VERIFY_RESULT)
+    final = payload_of(events, EventType.RUN_FINAL)
+
+    assert verification["outcome"] == "unverifiable"
+    assert "never retrieved" in verification["summary"]
+    assert final["label"] != ResolutionLabel.VERIFIED.value
+
+
 async def test_interpretation_dispute_is_branched_not_debated():
     orch = orchestrator(
         {

@@ -41,7 +41,12 @@ class Verification(BaseModel):
     summary: str = ""
     queries: list[str] = Field(default_factory=list)  # both framings, for the trace
     citations: list[Citation] = Field(default_factory=list)
-    verdict_span: tuple[int, int] | None = None  # where the summary states the verdict
+
+    # The subset of retrieved sources the verifier said its verdict rests on. Required for
+    # SUPPORTS, and checked against what was actually retrieved: when retrieval is performed by
+    # the gateway rather than the model, "citations are present" no longer proves the model used
+    # them, so the model has to name which ones carry the verdict and code confirms they exist.
+    supporting_urls: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def _admissible(self) -> "Verification":
@@ -50,6 +55,11 @@ class Verification(BaseModel):
                 raise ValueError(
                     f"{self.dispute_id}: SUPPORTS without citations — inadmissible, "
                     "must be recorded as UNVERIFIABLE"
+                )
+            if not self.supporting_urls:
+                raise ValueError(
+                    f"{self.dispute_id}: SUPPORTS without naming which sources carry the "
+                    "verdict — inadmissible"
                 )
             if not self.winning_stance:
                 raise ValueError(f"{self.dispute_id}: SUPPORTS without a winning stance")

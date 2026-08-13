@@ -513,6 +513,7 @@ class Orchestrator:
                         "role": completion.role,
                         "slug": completion.slug,
                         "upstream_provider": completion.upstream_provider,
+                        "routing_unpinned": completion.routing_unpinned,
                         "generation_id": completion.generation_id,
                         "call_key": completion.call_key,
                         "prompt_tokens": completion.usage.prompt_tokens,

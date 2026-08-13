@@ -8,18 +8,73 @@ reports which invariants are currently satisfied by configuration versus assumed
 import asyncio
 import sys
 
+from .calls import Caller
 from .contracts import Role
 from .providers import catalog
-from .roles import ConfigError, RoleRegistry, family
+from .providers.base import ProviderError
+from .providers.openrouter import OpenRouterProvider
+from .roles import ConfigError, ResolvedRole, RoleRegistry, family
+from .schemas import SCHEMAS
 from .settings import load_config, load_settings
 
 OK = "ok"
 WARN = "warn"
 FAIL = "FAIL"
 
+# Which output shape each seat is held to, for the probe below.
+_SEAT_SCHEMA = {
+    Role.COMPARATOR: "comparison",
+    Role.VERIFIER: "verification",
+    Role.SYNTHESIZER: "synthesis",
+    Role.NORMALIZER: "normalizer",
+    Role.RED_TEAM: "red_team",
+}
+
+_PROBE = (
+    "This is a capability probe, not a real task. Return the minimal valid JSON object for "
+    "your required output shape, using empty strings, empty arrays and any allowed enum value. "
+    "Do not add commentary."
+)
+
 
 def _line(status: str, text: str) -> str:
     return f"  [{status:>4}] {text}"
+
+
+async def _probe_seat(caller: Caller, role: ResolvedRole) -> tuple[str, str]:
+    """Make one real, tiny call per referee seat.
+
+    Reading `supported_parameters` is not enough: the catalogue reports the union across a
+    model's endpoints, so a seat can pass every metadata check and still 404 on first use
+    because no single endpoint honours the strict schema alongside everything else we send.
+    A boot check that does not place a call is not a boot check.
+    """
+    schema_name = _SEAT_SCHEMA[role.role]
+    out_model = SCHEMAS[schema_name]
+    try:
+        call = await caller.call(
+            role=role.role.value,
+            slug=role.slug,
+            messages=[{"role": "user", "content": _PROBE}],
+            prompt_version=role.prompt_version,
+            out_model=out_model,
+            schema_name=schema_name,
+            fallback_slugs=role.fallbacks,
+            timeout_s=60.0,
+            allow_repair=False,
+        )
+    except ProviderError as exc:
+        return FAIL, f"probe failed: {exc}"
+
+    served = call.completion.slug
+    detail = f"probe ok via {served}"
+    if served != role.slug:
+        detail += f" (chain fell back from {role.slug})"
+    if call.completion.routing_unpinned:
+        return WARN, detail + " — strict routing had no endpoint, ran unpinned"
+    if call.parsed is None:
+        return WARN, detail + " — routed, but the schema was not honoured"
+    return OK, detail
 
 
 async def main() -> int:
@@ -81,6 +136,9 @@ async def main() -> int:
     out.append("")
     out.append("referee seats")
     registry = RoleRegistry(cfg, caps if caps.known else None)
+    provider = OpenRouterProvider(settings) if settings.openrouter_api_key else None
+    caller = Caller(provider) if provider else None
+
     for role in (Role.COMPARATOR, Role.VERIFIER, Role.SYNTHESIZER, Role.NORMALIZER, Role.RED_TEAM):
         try:
             resolved = registry.resolve(role, panel=cfg.panel_default)
@@ -98,6 +156,17 @@ async def main() -> int:
         warnings += 0 if status == OK else 1
         for note in resolved.notes:
             out.append(f"         · {note}")
+
+        if caller and resolved.enabled:
+            probe_status, probe_detail = await _probe_seat(caller, resolved)
+            out.append(f"         · {probe_detail}")
+            if probe_status == FAIL:
+                problems += 1
+            elif probe_status == WARN:
+                warnings += 1
+
+    if provider:
+        await provider.aclose()
 
     comparator = cfg.roles.get("comparator")
     if comparator:

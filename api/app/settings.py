@@ -36,6 +36,11 @@ class RoleConfig(BaseModel):
     off_panel: Literal["require", "prefer", "ignore"] = "prefer"
     temperature: float = 0.0
 
+    # Where retrieval happens. "exa" has OpenRouter run the search and inject results, which
+    # works with any model; "native" drives the model's own search and therefore restricts the
+    # chain to models advertising it. Citations arrive in the same normalised shape either way.
+    search_engine: Literal["exa", "native"] = "exa"
+
 
 class VerifiedConfig(BaseModel):
     slug: str
@@ -94,7 +99,13 @@ def _load_dotenv() -> None:
         if not line or line.startswith("#") or "=" not in line:
             continue
         key, _, value = line.partition("=")
-        os.environ.setdefault(key.strip(), value.strip())
+        value = value.strip()
+        # Quoting a value in .env is normal and must not become part of it: a quoted
+        # connection string otherwise fails with "invalid URI scheme" and looks like a
+        # credentials problem rather than a parsing one.
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in ("'", '"'):
+            value = value[1:-1]
+        os.environ.setdefault(key.strip(), value)
 
 
 def load_settings() -> Settings:

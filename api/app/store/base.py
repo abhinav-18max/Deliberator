@@ -16,6 +16,10 @@ from ..contracts import TraceEvent
 
 
 class StorePort(Protocol):
+    # Whether a run survives a restart. Reported by /health, so the answer comes from the
+    # store actually in use rather than from configuration that may not have been applied.
+    durable: bool
+
     async def ensure_ready(self) -> None: ...
 
     async def create_run(self, run_id: str, doc: dict[str, Any]) -> None: ...

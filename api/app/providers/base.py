@@ -33,7 +33,8 @@ class CallSpec(BaseModel):
     schema_name: str | None = None
     json_schema: dict[str, Any] | None = None
     temperature: float = 0.0
-    web: bool = False  # native grounded search — resolution only, never answering
+    web: bool = False  # grounded search — resolution only, never answering
+    web_engine: str = "exa"  # "exa" = gateway retrieval, "native" = the model's own search
     max_results: int = 5
 
     def key(self) -> str:
@@ -45,6 +46,7 @@ class CallSpec(BaseModel):
             "schema": self.schema_name,
             "temperature": self.temperature,
             "web": self.web,
+            "web_engine": self.web_engine if self.web else None,
         }
         blob = json.dumps(material, sort_keys=True, ensure_ascii=False)
         return hashlib.sha256(blob.encode()).hexdigest()[:32]
@@ -67,6 +69,11 @@ class Completion(BaseModel):
     finish_reason: str | None = None
     latency_ms: int = 0
     repaired: bool = False
+
+    # True when strict routing found no endpoint and the call was retried without the
+    # require_parameters pin. The schema was still requested and the response still parsed;
+    # what is lost is the guarantee that the endpoint promised to honour it.
+    routing_unpinned: bool = False
 
 
 class ProviderError(RuntimeError):

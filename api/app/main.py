@@ -93,7 +93,7 @@ def create_app(
     async def health() -> dict:
         return {
             "ok": True,
-            "durable_store": resolved_settings.has_mongo,
+            "durable_store": getattr(app.state.store, "durable", False),
             "config_fingerprint": resolved_cfg.fingerprint(),
         }
 

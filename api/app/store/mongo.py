@@ -18,6 +18,8 @@ from ..contracts import TraceEvent
 
 
 class MongoStore:
+    durable = True
+
     def __init__(self, uri: str, db_name: str) -> None:
         self._client: AsyncMongoClient = AsyncMongoClient(uri, tz_aware=True)
         self._db = self._client[db_name]

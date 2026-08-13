@@ -40,14 +40,21 @@ class Capabilities:
         params = self._params(slug)
         return "structured_outputs" in params or "response_format" in params
 
-    def supports_web(self, slug: str) -> bool | None:
+    def supports_native_web(self, slug: str) -> bool | None:
+        """Whether the model has its *own* search that OpenRouter's `engine: "native"` can drive.
+
+        Measured by `web_search_options` in the advertised parameters. As of writing this is a
+        short list — notably it does not include any Gemini model, so provider-native grounding
+        is not a route to a current-knowledge verifier. Gateway retrieval (`engine: "exa"`) has
+        no model requirement, which is why it is the default.
+        """
         if slug not in self._entries:
             return None
-        entry = self._entries[slug]
-        # A model is groundable through OpenRouter either by supporting tools natively or by
-        # being one of the providers whose built-in search the web plugin can drive.
-        params = self._params(slug)
-        return bool(entry.get("supports_web") or "tools" in params)
+        return "web_search_options" in self._params(slug)
+
+    # Kept as the name the role registry asks for; gateway retrieval works with any model, so
+    # the only real capability question is whether native search is available.
+    supports_web = supports_native_web
 
     def context_length(self, slug: str) -> int | None:
         entry = self._entries.get(slug)

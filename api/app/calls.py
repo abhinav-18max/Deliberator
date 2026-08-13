@@ -16,7 +16,7 @@ from typing import TypeVar
 
 from pydantic import BaseModel, ValidationError
 
-from .providers.base import CallSpec, Completion, LLMPort
+from .providers.base import CallSpec, Completion, LLMPort, ModelUnavailable
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -75,22 +75,41 @@ class Caller:
         out_model: type[T] | None = None,
         schema_name: str | None = None,
         web: bool = False,
+        web_engine: str = "exa",
         temperature: float = 0.0,
         timeout_s: float = 90.0,
         allow_repair: bool = True,
         skip_repair_if: Callable[[Completion], bool] | None = None,
+        fallback_slugs: tuple[str, ...] = (),
     ) -> Call:
-        spec = CallSpec(
-            role=role,
-            slug=slug,
-            messages=messages,
-            prompt_version=prompt_version,
-            schema_name=schema_name,
-            json_schema=None,
-            temperature=temperature,
-            web=web,
-        )
-        completion = await self.provider.complete(spec, timeout_s=timeout_s)
+        def build(candidate: str) -> CallSpec:
+            return CallSpec(
+                role=role,
+                slug=candidate,
+                messages=messages,
+                prompt_version=prompt_version,
+                schema_name=schema_name,
+                json_schema=None,
+                temperature=temperature,
+                web=web,
+                web_engine=web_engine,
+            )
+
+        # Walk the seat's chain. A pinned slug goes unroutable or rate-limits eventually, and a
+        # configured fallback that nothing ever tries is not a fallback.
+        candidates = [slug, *fallback_slugs]
+        spec = build(slug)
+        completion: Completion | None = None
+        for index, candidate in enumerate(candidates):
+            spec = build(candidate)
+            try:
+                completion = await self.provider.complete(spec, timeout_s=timeout_s)
+                break
+            except ModelUnavailable:
+                if index == len(candidates) - 1:
+                    raise
+        assert completion is not None  # the loop either breaks with one or re-raises
+
         if self.on_call:
             self.on_call(completion)
 

@@ -45,6 +45,10 @@ class ResolvedRole:
     temperature: float = 0.0
     require_structured: bool = False
     require_web: bool = False
+    search_engine: str = "exa"
+    # The rest of the capable chain, in order. Chains exist because a pinned slug will
+    # rate-limit or go unroutable mid-run, so something has to actually walk them.
+    fallbacks: tuple[str, ...] = ()
     enabled: bool = True
     on_panel: bool = False  # a referee that is also a panelist judges its own output
     notes: tuple[str, ...] = ()
@@ -105,9 +109,15 @@ class RoleRegistry:
         caps = self.capabilities
         if caps is None:
             return True, "capability not verified against the catalogue"
+        if caps.supports_structured(slug) is None:
+            # The catalogue was consulted and this slug is not in it. Slugs are retired
+            # regularly, and a pin that no longer exists must fall through to the next
+            # candidate rather than resolving "ok" and failing on first use.
+            return False, f"{slug} is not in the catalogue"
         if rc.require_structured and caps.supports_structured(slug) is False:
             return False, f"{slug} cannot emit strict JSON schema"
-        if rc.require_web and caps.supports_web(slug) is False:
+        # Only native search constrains the model. Gateway retrieval works with anything.
+        if rc.require_web and rc.search_engine == "native" and caps.supports_web(slug) is False:
             return False, f"{slug} has no native web search"
         return True, None
 
@@ -153,6 +163,7 @@ class RoleRegistry:
                 temperature=0.0,
                 require_structured=rc.require_structured,
                 require_web=rc.require_web,
+                search_engine=rc.search_engine,
                 enabled=False,
                 notes=tuple(notes + [f"{role.value} disabled: no capable model configured"]),
             )
@@ -176,10 +187,12 @@ class RoleRegistry:
         return ResolvedRole(
             role=role,
             slug=slug,
+            fallbacks=tuple(c for c in capable if c != slug),
             prompt_version=rc.prompt_version,
             temperature=0.0,  # clamped: control flow must not sample
             require_structured=rc.require_structured,
             require_web=rc.require_web,
+            search_engine=rc.search_engine,
             enabled=True,
             on_panel=on_panel,
             notes=tuple(notes),

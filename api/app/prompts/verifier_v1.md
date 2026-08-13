@@ -34,4 +34,9 @@ Rules:
    stance id.
 5. If you could not retrieve anything relevant, return `unverifiable`.
 
+6. `supporting_urls` must list the URLs, from the sources you were actually given, that carry
+   your verdict. Every entry is checked against what was retrieved. A URL that was not in your
+   sources is a fabricated citation and discards the entire result — an empty list is far better
+   than a plausible-looking one.
+
 `summary` should be short: what the sources say, and what that means for the two positions.
