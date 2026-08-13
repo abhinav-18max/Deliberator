@@ -5,7 +5,7 @@ differences that would change what you do, and return **one** answer labelled wi
 
 - **Design and reasoning:** [DESIGN.md](DESIGN.md)
 - **Worked examples with real traces:** [docs/demo.md](docs/demo.md)
-- **Figures:** <https://claude.ai/code/artifact/416c38ec-089c-49f5-b258-5e16e224676c>
+- **Figures and borrowed principles:** the app's own `/architecture` page, once `make web` is running
 
 ```
 task ─► GUARD ─► FAN-OUT ─► COMPARE ─┬─► RESOLVE ─► FINALIZE ─► answer + label + confidence
@@ -67,6 +67,14 @@ make web    # http://localhost:3000
 Open <http://localhost:3000>, pick a panel (three distinct families by default), and ask
 something with a real decision in it. The stage timeline updates live; the trace below the answer
 is the full record.
+
+Three pages:
+
+| Route | What it is |
+|---|---|
+| `/` | Composer — task, context, panel, mode |
+| `/runs` | Every past deliberation with its label, cost and call count |
+| `/architecture` | The three figures, the borrowed principles, the invariants, and how each claim is checked |
 
 ## Make targets
 

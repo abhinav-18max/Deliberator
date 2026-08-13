@@ -3,7 +3,8 @@
 A user enters a task, selects which models participate, and receives **one** answer carrying an
 honest label of how hard it was to win.
 
-Rendered figures: <https://claude.ai/code/artifact/416c38ec-089c-49f5-b258-5e16e224676c>
+The diagrams below render on GitHub. The same three figures, drawn to scale and with the borrowed
+principles written out, are served by the app itself at `/architecture`.
 
 ---
 
